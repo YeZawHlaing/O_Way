@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Mg Mg",
+    "password": "123",
+    "roles": {
+      "id": 1,
+      "name": "Customer"
+    },
+    "profile": null,
+    "vehicle": null,
+    "rentals": []
+  },
+  {
+    "id": 2,
+    "name": "Soe Khant",
+    "password": "pass123",
+    "roles": {
+      "id": 1,
+      "name": "Customer"
+    },
+    "profile": null,
+    "vehicle": null,
+    "rentals": []
+  }
+]

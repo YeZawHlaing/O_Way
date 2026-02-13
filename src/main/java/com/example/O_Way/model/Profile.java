@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,14 +20,13 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String fullName;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true)
     private String contact;
 
     @Column(nullable = false)
@@ -40,11 +40,8 @@ public class Profile {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
     @JoinColumn(name = "location_id")
     private Location location;
-
 
 }
