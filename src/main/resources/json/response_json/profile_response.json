@@ -1,0 +1,19 @@
+{
+  "code": 200,
+  "data": {
+    "contact": "09683776164",
+    "dob": "1990-01-01",
+    "email": "yzaw1@gmail.com",
+    "fullName": "Soe Khant",
+    "gender": "Male",
+    "id": 1,
+    "location": {
+      "latitude": 3453.33,
+      "longitude": 5833.222
+    },
+    "profilePic": "pic1.jpg"
+  },
+  "message": "Profile fetched successfully",
+  "meta": null,
+  "success": 1
+}
