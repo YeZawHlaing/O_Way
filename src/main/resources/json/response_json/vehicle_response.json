@@ -1,0 +1,25 @@
+{
+  "code": 200,
+  "data": {
+    "address": {
+      "city": "Yangon",
+      "road": "Pyay Road",
+      "street": "Street 1",
+      "township": "Hlaing"
+    },
+    "contact": "09123456789",
+    "driverStatus": "AVAILABLE",
+    "id": 1,
+    "location": {
+      "latitude": 16.8409,
+      "longitude": 96.1735
+    },
+    "nrc": "12/ABC(N)123456",
+    "plateNumber": "YGN-1234",
+    "userId": 1,
+    "vehicleStatus": "PENDING"
+  },
+  "message": "Vehicle fetched successfully",
+  "meta": null,
+  "success": 1
+}
