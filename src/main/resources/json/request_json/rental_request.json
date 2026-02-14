@@ -1,0 +1,11 @@
+{
+  "userId": 1,
+  "vehicleId": 1,
+  "distance": 10,
+  "rentalTime": "2026-02-14T10:30:00",
+  "rentalStatus": "PENDING",
+  "location": {
+    "latitude": 16.8409,
+    "longitude": 96.1735
+  }
+}

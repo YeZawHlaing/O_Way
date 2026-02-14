@@ -1,0 +1,20 @@
+{
+  "code": 200,
+  "data": {
+    "distance": 10,
+    "estimateCost": 0.0,
+    "id": 1,
+    "location": {
+      "latitude": 16.8409,
+      "longitude": 96.1735
+    },
+    "paidAt": null,
+    "rentalStatus": "PENDING",
+    "rentalTime": "2026-02-14T10:30:00",
+    "userId": 1,
+    "vehicleId": 1
+  },
+  "message": "Rental created successfully",
+  "meta": null,
+  "success": 1
+}

@@ -24,13 +24,13 @@ public class Vehicle {
     private Long id;
 
     @Column(unique = true,nullable = false)
-    private String Plate_number;
+    private String PlateNumber;
 
     @Column(unique = true, nullable = false)
     private String contact;
 
     @Column(unique = true,nullable = false)
-    private String NRC;
+    private String nrc;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

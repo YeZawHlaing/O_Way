@@ -1,0 +1,17 @@
+{
+  "plateNumber": "YGN-1234",
+  "contact": "09123456789",
+  "nrc": "12/ABC(N)123456",
+  "vehicleStatus": "PENDING",
+  "driverStatus": " AVAILABLE",
+  "location": {
+    "latitude": 16.8409,
+    "longitude": 96.1735
+  },
+  "address": {
+    "city": "Yangon",
+    "township": "Hlaing",
+    "road": "Pyay Road",
+    "street": "Street 1"
+  }
+}
