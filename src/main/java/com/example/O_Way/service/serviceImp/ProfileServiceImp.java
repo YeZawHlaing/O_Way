@@ -5,6 +5,7 @@ import com.example.O_Way.common.storage.StorageService;
 import com.example.O_Way.common.storage.StorageServiceFactory;
 import com.example.O_Way.dto.requestDto.ProfileRequestDto;
 import com.example.O_Way.dto.responseDto.ProfileResponseDto;
+import com.example.O_Way.model.Location;
 import com.example.O_Way.model.Profile;
 import com.example.O_Way.model.User;
 import com.example.O_Way.repo.ProfileRepo;
@@ -60,34 +61,42 @@ public class ProfileServiceImp implements ProfileService {
 
     }
 
-    @jakarta.transaction.Transactional
     @Override
-    public ApiResponse createProfile(Long userId, ProfileRequestDto profileRequest) {
+    public ApiResponse createProfile(Long userId, ProfileRequestDto request) {
 
-        // Fetch user
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        // Map DTO to entity
-        Profile profile = modelMapper.map(profileRequest, Profile.class);
+        // Check if profile already exists
+        if (profileRepository.findByUser_Id(userId).isPresent()) {
+            throw new RuntimeException("Profile already exists for this user");
+        }
 
-        // Assign user
+        Profile profile = new Profile();
+
+        // 🔥 SET FIELDS MANUALLY
+        profile.setFullName(request.getFullName());
+        profile.setEmail(request.getEmail());
+        profile.setContact(request.getContact());
+        profile.setDob(request.getDob());
+        profile.setGender(request.getGender());
+        profile.setProfilePic(null);
         profile.setUser(user);
 
-        // Optional: default profilePic to null
-        profile.setProfilePic(null);
+        // Create Location
+        Location location = new Location();
+        location.setLatitude(request.getLocationRequestDto().getLatitude());
+        location.setLongitude(request.getLocationRequestDto().getLongitude());
 
-        // Save
+        profile.setLocation(location);
+
         profileRepository.save(profile);
-
-        // Map back to response DTO
-        ProfileResponseDto response = modelMapper.map(profile, ProfileResponseDto.class);
 
         return ApiResponse.builder()
                 .success(1)
                 .code(200)
-                .data(response)
                 .message("Profile created successfully")
+                .data(profile)
                 .build();
     }
 

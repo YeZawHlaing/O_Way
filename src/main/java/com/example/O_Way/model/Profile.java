@@ -26,7 +26,7 @@ public class Profile {
     @Column(nullable = false)
     private String fullName;
 
-    @Column(unique = true, nullable = true)
+    @Column(unique = true, nullable = false)
     private String contact;
 
     @Column(nullable = false)
