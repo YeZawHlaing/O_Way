@@ -19,27 +19,12 @@ public class ProfileController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> createProfile(
-            @RequestParam("userId") Long userId,
-            @RequestBody ProfileRequestDto profileRequest
+            @RequestParam Long userId,
+            @Valid @RequestBody ProfileRequestDto request
     ) {
-        // Directly call service, no @Valid needed
-        ApiResponse response = profileService.createProfile(userId, profileRequest);
+        ApiResponse response = profileService.createProfile(userId, request);
         return ResponseEntity.ok(response);
     }
-
-    // -------------------------------
-    // Create Profile (with optional file)
-    // -------------------------------
-//    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-//    public ResponseEntity<ApiResponse> createProfile(
-//            @RequestParam("userId") Long userId,
-//            @Valid @RequestPart("profile") ProfileRequestDto profileRequest,
-//            @RequestPart(value = "file", required = false) MultipartFile file
-//    ) {
-//        ApiResponse response = profileService.createProfile(userId, profileRequest, file);
-//        return ResponseEntity.ok(response);
-//    }
-
 
 
     // -------------------------------

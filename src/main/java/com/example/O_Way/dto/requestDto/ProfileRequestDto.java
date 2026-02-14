@@ -9,38 +9,31 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-
 @Getter
 @Setter
 public class ProfileRequestDto {
 
-    // Required (entity nullable = false)
-    @NotBlank(message = "Full name must not be empty")
+    @NotBlank(message = "Full name is required")
     private String fullName;
 
-    // Required (entity nullable = false, unique = true)
     @NotBlank(message = "Email is required")
-    @Email(message = "Email must be valid")
+    @Email(message = "Invalid email format")
     private String email;
 
-    // OPTIONAL (entity nullable = true, unique = true)
+    @NotBlank(message = "Contact is required")
     @Pattern(
             regexp = "^09\\d{9}$",
             message = "Phone number must start with 09 and be exactly 11 digits"
     )
     private String contact;
 
-    // Required (entity nullable = false)
     @NotNull(message = "Date of birth is required")
     private LocalDate dob;
 
-    // Optional (entity nullable = true)
-    private String profilePic;
-
-    // Optional (entity has no NOT NULL constraint)
+    @NotBlank(message = "Gender is required")
     private String gender;
 
-    // Optional (entity does not specify nullable = false)
+    @NotNull(message = "Location is required")
     @Valid
     private LocationRequestDto locationRequestDto;
 }

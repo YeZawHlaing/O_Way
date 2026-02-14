@@ -1,4 +1,5 @@
-{
+[
+  {
   "code": 200,
   "data": {
     "contact": "09683776164",
@@ -16,4 +17,61 @@
   "message": "Profile fetched successfully",
   "meta": null,
   "success": 1
+},
+  {
+    "code": 200,
+    "data": {
+      "contact": "09123456789",
+      "dob": "1995-05-10",
+      "email": "john.doe@example.com",
+      "fullName": "John Doe",
+      "gender": "Male",
+      "id": 2,
+      "location": {
+        "latitude": 16.8409,
+        "longitude": 96.1735
+      },
+      "profilePic": null
+    },
+    "message": "Profile fetched successfully",
+    "meta": null,
+    "success": 1
+  }
+,
+{
+  "code": 200,
+  "data": {
+    "id": 2,
+    "email": "john.doe@example.com",
+    "fullName": "John Doe",
+    "contact": "09123456789",
+    "dob": "1995-05-10",
+    "profilePic": null,
+    "gender": "Male",
+    "user": {
+      "id": 2,
+      "name": "Soe Khant",
+      "password": "pass123",
+      "roles": {
+        "id": 1,
+        "name": "Customer"
+      },
+      "profile": null,
+      "vehicle": null,
+      "rentals": []
+    },
+    "location": {
+      "id": 68,
+      "latitude": 16.8409,
+      "longitude": 96.1735,
+      "profile": null,
+      "vehicle": null,
+      "rental": null
+    }
+  },
+  "message": "Profile created successfully",
+  "meta": null,
+  "success": 1
 }
+
+  ]
