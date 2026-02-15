@@ -1,0 +1,280 @@
+openapi: 3.0.3
+info:
+  title: O-Way API Documentation
+  description: Backend API documentation for O-Way Rental System
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api
+
+paths:
+
+  # =========================
+  # PROFILE
+  # =========================
+  /profile/{userId}:
+    post:
+      summary: Create Profile
+      tags: [Profile]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileRequestDto'
+      responses:
+        "200":
+          description: Profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+    put:
+      summary: Update Profile
+      tags: [Profile]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileRequestDto'
+      responses:
+        "200":
+          description: Profile updated successfully
+
+    get:
+      summary: Get Profile by User ID
+      tags: [Profile]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Profile fetched successfully
+
+  # =========================
+  # VEHICLE
+  # =========================
+  /vehicle/{userId}:
+    post:
+      summary: Create Vehicle
+      tags: [Vehicle]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleRequestDto'
+      responses:
+        "200":
+          description: Vehicle created successfully
+
+    put:
+      summary: Update Vehicle
+      tags: [Vehicle]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleRequestDto'
+      responses:
+        "200":
+          description: Vehicle updated successfully
+
+    get:
+      summary: Get Vehicle by User ID
+      tags: [Vehicle]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Vehicle fetched successfully
+
+  # =========================
+  # RENTAL
+  # =========================
+  /rental:
+    post:
+      summary: Create Rental
+      tags: [Rental]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalRequestDto'
+      responses:
+        "200":
+          description: Rental created successfully
+
+  /rental/{rentalId}:
+    get:
+      summary: Get Rental by ID
+      tags: [Rental]
+      parameters:
+        - name: rentalId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Rental fetched successfully
+
+# =========================
+# COMPONENTS
+# =========================
+components:
+
+  schemas:
+
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: integer
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+
+    # ================= PROFILE =================
+    ProfileRequestDto:
+      type: object
+      required:
+        - fullName
+        - contact
+      properties:
+        fullName:
+          type: string
+        contact:
+          type: string
+          example: 09123456789
+        address:
+          $ref: '#/components/schemas/AddressDto'
+
+    # ================= VEHICLE =================
+    VehicleRequestDto:
+      type: object
+      required:
+        - plateNumber
+        - contact
+        - nrc
+        - vehicleStatus
+        - driverStatus
+      properties:
+        plateNumber:
+          type: string
+        contact:
+          type: string
+        nrc:
+          type: string
+        vehicleStatus:
+          $ref: '#/components/schemas/VehicleStatus'
+        driverStatus:
+          $ref: '#/components/schemas/DriverStatus'
+        location:
+          $ref: '#/components/schemas/LocationDto'
+        address:
+          $ref: '#/components/schemas/AddressDto'
+
+    # ================= RENTAL =================
+    RentalRequestDto:
+      type: object
+      required:
+        - userId
+        - vehicleId
+        - rentalTime
+      properties:
+        userId:
+          type: integer
+        vehicleId:
+          type: integer
+        distance:
+          type: integer
+        rentalTime:
+          type: string
+          format: date-time
+        location:
+          $ref: '#/components/schemas/LocationDto'
+
+    # ================= LOCATION =================
+    LocationDto:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+
+    # ================= ADDRESS =================
+    AddressDto:
+      type: object
+      properties:
+        city:
+          type: string
+        township:
+          type: string
+        street:
+          type: string
+
+    # ================= ENUMS =================
+    VehicleStatus:
+      type: string
+      enum:
+        - AVAILABLE
+        - UNAVAILABLE
+        - IN_USE
+
+    DriverStatus:
+      type: string
+      enum:
+        - FREE
+        - BUSY
+        - OFFLINE
+
+    RentalStatus:
+      type: string
+      enum:
+        - REQUESTED
+        - ACCEPTED
+        - ONGOING
+        - COMPLETED
+        - CANCELLED
