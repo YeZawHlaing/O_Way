@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -26,6 +27,7 @@ public class UserServiceImp implements UserService {
     private final UserRepo userRepository;
     private final RolesRepo roleRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -36,7 +38,7 @@ public class UserServiceImp implements UserService {
 
         User user = new User();
         user.setName(request.getName());
-        user.setPassword(request.getPassword()); // encode later if needed
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(role);
 
         userRepository.save(user);

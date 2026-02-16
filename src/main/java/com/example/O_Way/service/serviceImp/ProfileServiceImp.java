@@ -62,33 +62,34 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public ApiResponse createProfile(Long userId, ProfileRequestDto request) {
+    public ApiResponse createProfile(final String username, final ProfileRequestDto request){
+// 1️⃣ Find logged-in user by username
+        User user = userRepository.findByName(username);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-        // Check if profile already exists
-        if (profileRepository.findByUser_Id(userId).isPresent()) {
-            throw new RuntimeException("Profile already exists for this user");
+        // 2️⃣ Prevent duplicate profile
+        if (user.getProfile() != null) {
+            throw new IllegalStateException("Profile already exists for this user");
         }
 
+        // 3️⃣ Create Profile
         Profile profile = new Profile();
-
-        // 🔥 SET FIELDS MANUALLY
         profile.setFullName(request.getFullName());
         profile.setEmail(request.getEmail());
         profile.setContact(request.getContact());
         profile.setDob(request.getDob());
         profile.setGender(request.getGender());
         profile.setProfilePic(null);
-        profile.setUser(user);
 
-        // Create Location
+        // 4️⃣ Map Location
         Location location = new Location();
         location.setLatitude(request.getLocationRequestDto().getLatitude());
         location.setLongitude(request.getLocationRequestDto().getLongitude());
 
         profile.setLocation(location);
+
+        // 5️⃣ Set relationship
+        profile.setUser(user);
+        user.setProfile(profile);
 
         profileRepository.save(profile);
 
@@ -96,7 +97,7 @@ public class ProfileServiceImp implements ProfileService {
                 .success(1)
                 .code(200)
                 .message("Profile created successfully")
-                .data(profile)
+                .data(null)
                 .build();
     }
 
@@ -131,6 +132,24 @@ public class ProfileServiceImp implements ProfileService {
                 .success(1)
                 .code(200)
                 .data(response)
+                .message("Profile fetched successfully")
+                .build();
+    }
+
+    @Override
+    public ApiResponse getProfileByUsername(String username) {
+        User user = userRepository.findByName(username);
+
+
+        Profile profile = profileRepository.findByUser_Id(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Profile not found"));
+
+        ProfileResponseDto dto = modelMapper.map(profile, ProfileResponseDto.class);
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .data(dto)
                 .message("Profile fetched successfully")
                 .build();
     }
