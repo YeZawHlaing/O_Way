@@ -29,6 +29,4 @@ public class Location {
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
     private Vehicle vehicle;
 
-    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
-    private Rental rental;
 }

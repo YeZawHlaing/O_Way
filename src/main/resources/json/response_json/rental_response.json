@@ -1,3 +1,4 @@
+[
 {
   "code": 200,
   "data": {
@@ -17,4 +18,27 @@
   "message": "Rental created successfully",
   "meta": null,
   "success": 1
+},
+
+{
+"code": 200,
+"data": {
+"customerId": 1,
+"distance": 12,
+"driverId": 2,
+"dropLatitude": 16.8661,
+"dropLongitude": 96.1951,
+"estimateCost": 0.0,
+"id": 1,
+"paidAt": null,
+"pickupLatitude": 16.8409,
+"pickupLongitude": 96.1735,
+"rentalStatus": "PENDING",
+"rentalTime": "2026-02-17T02:27:24.159209365",
+"vehicleId": 1
+},
+"message": "Rental requested successfully",
+"meta": null,
+"success": 1
 }
+]

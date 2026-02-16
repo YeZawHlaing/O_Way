@@ -11,20 +11,21 @@ import java.time.LocalDateTime;
 public class RentalResponseDto {
 
     private Long id;
-
-    private Long userId;
-
+    private Long customerId;
+    private Long driverId;
     private Long vehicleId;
 
     private Long distance;
-
-    private LocalDateTime rentalTime;
-
     private double estimateCost;
 
+    private LocalDateTime rentalTime;
     private LocalDateTime paidAt;
 
     private Rental_Status rentalStatus;
 
-    private LocationResponseDto location;
+    private Double pickupLatitude;
+    private Double pickupLongitude;
+
+    private Double dropLatitude;
+    private Double dropLongitude;
 }

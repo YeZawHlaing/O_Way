@@ -33,14 +33,29 @@ public class Rental {
     @Column
     private LocalDateTime paid_at;
 
+    @Column
+    private Double pickupLatitude;
+
+    @Column
+    private Double pickupLongitude;
+
+    @Column
+    private Double dropLatitude;
+
+    @Column
+    private Double dropLongitude;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Rental_Status rentalStatus;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private User customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id", nullable = false)
+    private User driver;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,9 +63,6 @@ public class Rental {
     private Vehicle vehicle;
 
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @JoinColumn(name = "location_id")
-    private Location location;
+
 
 }

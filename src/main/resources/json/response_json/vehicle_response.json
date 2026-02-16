@@ -1,4 +1,4 @@
-{
+[{
   "code": 200,
   "data": {
     "address": {
@@ -22,4 +22,31 @@
   "message": "Vehicle fetched successfully",
   "meta": null,
   "success": 1
-}
+},
+
+  {
+    "code": 200,
+    "data": {
+      "address": {
+        "city": "Nay Pyi Taw",
+        "road": "PyinMaNar Market",
+        "street": "Street 1",
+        "township": "Pyin Ma Nar"
+      },
+      "contact": "09888676454",
+      "driverStatus": "AVAILABLE",
+      "id": 2,
+      "location": {
+        "latitude": 16.8409,
+        "longitude": 96.1735
+      },
+      "nrc": "10/PMN(N)123456",
+      "plateNumber": "NPT-1234",
+      "userId": 20,
+      "vehicleStatus": "PENDING"
+    },
+    "message": "Vehicle created successfully",
+    "meta": null,
+    "success": 1
+  }
+  ]

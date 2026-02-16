@@ -5,7 +5,7 @@ import com.example.O_Way.dto.requestDto.RentalRequestDto;
 
 public interface RentalService {
 
-    ApiResponse createRental(RentalRequestDto request);
+    public ApiResponse createRental(String username, RentalRequestDto request);
 
-    ApiResponse getRentalById(Long rentalId);
+    ApiResponse getRentalById(Long id);
 }

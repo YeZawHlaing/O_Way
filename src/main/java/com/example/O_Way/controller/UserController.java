@@ -2,6 +2,7 @@ package com.example.O_Way.controller;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.UserRequestDto;
+import com.example.O_Way.dto.responseDto.UserResponseDto;
 import com.example.O_Way.model.User;
 import com.example.O_Way.service.UserService;
 import com.example.O_Way.util.response.ResponseUtils;
@@ -28,9 +29,8 @@ public class UserController {
         return ResponseUtils.buildResponse(request, response);
     }
 
-    // 👇 GET ALL ROLES
-    @GetMapping("/getUser")
-    public ResponseEntity<List<User>> getUser() {
-        return ResponseEntity.ok(userService.getUser());
-    }
+@GetMapping("getUser")
+public ResponseEntity<List<UserResponseDto>> getUsers() {
+    return ResponseEntity.ok(userService.getUsers());
+}
 }

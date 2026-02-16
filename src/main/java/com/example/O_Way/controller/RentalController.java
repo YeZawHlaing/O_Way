@@ -6,6 +6,8 @@ import com.example.O_Way.service.RentalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,23 +17,22 @@ public class RentalController {
 
     private final RentalService rentalService;
 
-    // ===============================
     // CREATE RENTAL
-    // ===============================
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ApiResponse> createRental(
+            @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody RentalRequestDto request
     ) {
-        return ResponseEntity.ok(rentalService.createRental(request));
+        return ResponseEntity.ok(
+                rentalService.createRental(userDetails.getUsername(), request)
+        );
     }
 
-    // ===============================
     // GET RENTAL BY ID
-    // ===============================
-    @GetMapping("/{rentalId}")
-    public ResponseEntity<ApiResponse> getRentalById(
-            @PathVariable Long rentalId
-    ) {
-        return ResponseEntity.ok(rentalService.getRentalById(rentalId));
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getRentalById(@PathVariable Long id) {
+
+        ApiResponse response = rentalService.getRentalById(id);
+        return ResponseEntity.ok(response);
     }
 }
