@@ -12,23 +12,22 @@ import java.time.LocalDateTime;
 @Setter
 public class RentalRequestDto {
 
-    @NotNull(message = "User ID is required")
-    private Long userId;
-
-    @NotNull(message = "Vehicle ID is required")
+    @NotNull
     private Long vehicleId;
 
-    @NotNull(message = "Distance is required")
+    @NotNull
     private Long distance;
 
-    @NotNull(message = "Rental time is required")
-    private LocalDateTime rentalTime;
+    @NotNull
+    private Double pickupLatitude;
 
-    private LocalDateTime paidAt;
+    @NotNull
+    private Double pickupLongitude;
 
-    @NotNull(message = "Rental status is required")
-    private Rental_Status rentalStatus;
+    @NotNull
+    private Double dropLatitude;
 
-    @Valid
-    private LocationRequestDto location;
+    @NotNull
+    private Double dropLongitude;
+
 }

@@ -36,7 +36,6 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Vehicle vehicle;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rental> rentals = new ArrayList<>();
+
 
 }

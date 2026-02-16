@@ -6,6 +6,8 @@ import com.example.O_Way.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,12 +17,17 @@ public class VehicleController {
 
     private final VehicleService vehicleService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ApiResponse> createVehicle(
-            @RequestParam Long userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody VehicleRequestDto request
     ) {
-        return ResponseEntity.ok(vehicleService.createVehicle(userId, request));
+
+        String username = userDetails.getUsername();
+
+        return ResponseEntity.ok(
+                vehicleService.createVehicle(username, request)
+        );
     }
 
     @PutMapping("/update")
@@ -29,6 +36,19 @@ public class VehicleController {
             @Valid @RequestBody VehicleRequestDto request
     ) {
         return ResponseEntity.ok(vehicleService.updateVehicle(userId, request));
+    }
+
+    @PatchMapping
+    public ResponseEntity<ApiResponse> updateVehicle(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody VehicleRequestDto request
+    ) {
+
+        String username = userDetails.getUsername();
+
+        return ResponseEntity.ok(
+                vehicleService.updateVehicles(username, request)
+        );
     }
 
     @GetMapping()

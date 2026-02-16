@@ -1,3 +1,4 @@
+[
 {
   "userId": 1,
   "vehicleId": 1,
@@ -8,4 +9,14 @@
     "latitude": 16.8409,
     "longitude": 96.1735
   }
+},
+{
+"vehicleId": 2,
+"distance": 12,
+"rentalTime": "2026-02-17T14:30:00",
+"pickupLatitude": 16.8409,
+"pickupLongitude": 96.1735,
+"dropLatitude": 16.8661,
+"dropLongitude": 96.1951
 }
+]
