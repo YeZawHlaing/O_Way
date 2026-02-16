@@ -1,5 +1,6 @@
 package com.example.O_Way.controller;
 
+import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.model.Roles;
 import com.example.O_Way.service.RolesService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/roles")
 @RequiredArgsConstructor
+@CrossOrigin
 public class RolesController {
 
     private final RolesService rolesService;
@@ -20,6 +22,11 @@ public class RolesController {
 
         Roles savedRole = rolesService.CreateRole(role);
         return ResponseEntity.ok(savedRole);
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse getRoleById(@PathVariable("id") Long roleId) {
+        return rolesService.getRoleById(roleId);
     }
 
     // 👇 GET ALL ROLES
