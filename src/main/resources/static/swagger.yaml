@@ -1,27 +1,54 @@
 openapi: 3.0.3
 info:
   title: O-Way API Documentation
-  description: Backend API documentation for O-Way Rental System
-  version: 1.0.0
+  description: Secure Backend API for O-Way Rental System (JWT Based)
+  version: 2.0.0
 
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:8080
 
 paths:
 
   # =========================
-  # PROFILE
+  # AUTH
   # =========================
-  /profile/{userId}:
+  /api/auth/register:
     post:
-      summary: Create Profile
+      summary: Register new user (Customer or Driver)
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterRequest'
+      responses:
+        "200":
+          description: User registered successfully
+
+  /api/auth/login:
+    post:
+      summary: Login using username and password
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        "200":
+          description: Login successful and JWT returned
+
+  # =========================
+  # PROFILE (CUSTOMER)
+  # =========================
+  /api/customer/profile:
+    post:
+      summary: Create profile (Logged-in user)
       tags: [Profile]
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -31,20 +58,12 @@ paths:
       responses:
         "200":
           description: Profile created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
 
     put:
-      summary: Update Profile
+      summary: Update profile (Logged-in user)
       tags: [Profile]
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -56,31 +75,23 @@ paths:
           description: Profile updated successfully
 
     get:
-      summary: Get Profile by User ID
+      summary: Get my profile
       tags: [Profile]
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Profile fetched successfully
 
   # =========================
-  # VEHICLE
+  # VEHICLE (DRIVER)
   # =========================
-  /vehicle/{userId}:
+  /api/driver/vehicle:
     post:
-      summary: Create Vehicle
+      summary: Create vehicle (Driver only)
       tags: [Vehicle]
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -92,14 +103,10 @@ paths:
           description: Vehicle created successfully
 
     put:
-      summary: Update Vehicle
+      summary: Update vehicle (Driver only)
       tags: [Vehicle]
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -111,25 +118,23 @@ paths:
           description: Vehicle updated successfully
 
     get:
-      summary: Get Vehicle by User ID
+      summary: Get my vehicle
       tags: [Vehicle]
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Vehicle fetched successfully
 
   # =========================
-  # RENTAL
+  # RENTAL (CUSTOMER)
   # =========================
-  /rental:
+  /api/customer/rentals:
     post:
-      summary: Create Rental
+      summary: Create rental (Customer only)
       tags: [Rental]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -140,10 +145,12 @@ paths:
         "200":
           description: Rental created successfully
 
-  /rental/{rentalId}:
+  /api/customer/rentals/{rentalId}:
     get:
-      summary: Get Rental by ID
+      summary: Get rental by ID (Owner only)
       tags: [Rental]
+      security:
+        - bearerAuth: []
       parameters:
         - name: rentalId
           in: path
@@ -154,13 +161,21 @@ paths:
         "200":
           description: Rental fetched successfully
 
+
 # =========================
 # COMPONENTS
 # =========================
 components:
 
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
 
+    # ================= COMMON =================
     ApiResponse:
       type: object
       properties:
@@ -173,20 +188,58 @@ components:
         data:
           type: object
 
+    # ================= AUTH =================
+    UserRegisterRequest:
+      type: object
+      required:
+        - name
+        - password
+        - role
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [CUSTOMER, DRIVER]
+
+    LoginRequest:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+
     # ================= PROFILE =================
     ProfileRequestDto:
       type: object
       required:
         - fullName
+        - email
         - contact
+        - dob
+        - gender
       properties:
         fullName:
           type: string
+        email:
+          type: string
+          format: email
         contact:
           type: string
           example: 09123456789
-        address:
-          $ref: '#/components/schemas/AddressDto'
+        dob:
+          type: string
+          format: date
+        gender:
+          type: string
+        location:
+          $ref: '#/components/schemas/LocationDto'
 
     # ================= VEHICLE =================
     VehicleRequestDto:
@@ -217,12 +270,10 @@ components:
     RentalRequestDto:
       type: object
       required:
-        - userId
         - vehicleId
         - rentalTime
+        - distance
       properties:
-        userId:
-          type: integer
         vehicleId:
           type: integer
         distance:
@@ -230,7 +281,9 @@ components:
         rentalTime:
           type: string
           format: date-time
-        location:
+        pickupLocation:
+          $ref: '#/components/schemas/LocationDto'
+        dropoffLocation:
           $ref: '#/components/schemas/LocationDto'
 
     # ================= LOCATION =================
@@ -251,6 +304,8 @@ components:
         city:
           type: string
         township:
+          type: string
+        road:
           type: string
         street:
           type: string

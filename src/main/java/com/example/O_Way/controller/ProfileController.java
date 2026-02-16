@@ -7,22 +7,29 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/profiles")
+@RequestMapping("/api/customer")
 @RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileService profileService;
 
-    @PostMapping("/register")
+    @PostMapping("/profile")
     public ResponseEntity<ApiResponse> createProfile(
-            @RequestParam Long userId,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody ProfileRequestDto request
     ) {
-        ApiResponse response = profileService.createProfile(userId, request);
+
+        String username = userDetails.getUsername();
+
+        ApiResponse response = profileService.createProfile(username, request);
+
         return ResponseEntity.ok(response);
     }
 
@@ -66,5 +73,15 @@ public class ProfileController {
                         .data(fileUrl)
                         .build()
         );
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse> getProfile(Authentication authentication) {
+
+        String username = authentication.getName(); // from JWT
+
+        ApiResponse response = profileService.getProfileByUsername(username);
+
+        return ResponseEntity.ok(response);
     }
 }

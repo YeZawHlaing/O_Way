@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/rentals")
+@RequestMapping("/api/customer/rentals")
 @RequiredArgsConstructor
 public class RentalController {
 
@@ -18,7 +18,7 @@ public class RentalController {
     // ===============================
     // CREATE RENTAL
     // ===============================
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<ApiResponse> createRental(
             @Valid @RequestBody RentalRequestDto request
     ) {

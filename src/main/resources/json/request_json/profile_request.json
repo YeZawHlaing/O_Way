@@ -1,3 +1,4 @@
+[
 {
   "fullName": "John Doe",
   "email": "john.doe@example.com",
@@ -8,4 +9,16 @@
     "latitude": 16.8409,
     "longitude": 96.1735
   }
+},
+{
+"fullName": "Khant Zayer Soe",
+"email": "khant@gmail.com",
+"contact": "09123456789",
+"dob": "1995-05-10",
+"gender": "Male",
+"locationRequestDto": {
+"latitude": 16.8409,
+"longitude": 96.1735
 }
+}
+]

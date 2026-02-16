@@ -14,12 +14,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/createUser")
+    @PostMapping("/register")
     public ResponseEntity<ApiResponse> createUser(
             @RequestBody final UserRequestDto userRequest,
             final HttpServletRequest request

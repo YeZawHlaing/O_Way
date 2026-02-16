@@ -9,13 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/vehicles")
+@RequestMapping("/api/driver/vehicle")
 @RequiredArgsConstructor
 public class VehicleController {
 
     private final VehicleService vehicleService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<ApiResponse> createVehicle(
             @RequestParam Long userId,
             @Valid @RequestBody VehicleRequestDto request
@@ -31,7 +31,7 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.updateVehicle(userId, request));
     }
 
-    @GetMapping("/get")
+    @GetMapping()
     public ResponseEntity<ApiResponse> getVehicle(@RequestParam Long userId) {
         return ResponseEntity.ok(vehicleService.getVehicleById(userId));
     }
