@@ -12,7 +12,7 @@ public class UserResponseDto {
 
     private String password;
 
-    private String role;
+    private RolesResponseDto roles;
 
     private boolean hasProfile;
 }

@@ -26,7 +26,7 @@ public class RentalServiceImp implements RentalService {
     private final VehicleRepo vehicleRepo;
     private final ModelMapper modelMapper;
 
-    private static final double PRICE_PER_KM = 500; // Example pricing
+    private static final double PRICE_PER_KM = 500;
 
     // =========================================
     // CREATE RENTAL
