@@ -31,8 +31,8 @@ public class UserServiceImp implements UserService {
     @Override
     public ApiResponse createUser(UserRequestDto request) {
 
-        Roles role = roleRepository.findByName("Customer")
-                .orElseThrow(() -> new EntityNotFoundException("Default role USER not found."));
+        Roles role = roleRepository.findByName(request.getRoles())
+                .orElseThrow(() -> new EntityNotFoundException("Default role Customer not found."));
 
         User user = new User();
         user.setName(request.getName());
