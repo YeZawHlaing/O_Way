@@ -54,8 +54,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<User> getUser() {
-        return userRepository.findAll();
+    public List<UserResponseDto> getUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> modelMapper.map(user, UserResponseDto.class))
+                .toList();
     }
 
 }

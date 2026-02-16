@@ -14,5 +14,7 @@ public class UserResponseDto {
 
     private RolesResponseDto roles;
 
+    private ProfileResponseDto profile;
+
     private boolean hasProfile;
 }
