@@ -2,6 +2,7 @@ package com.example.O_Way.service.serviceImp;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.VehicleRequestDto;
+import com.example.O_Way.dto.responseDto.UserResponseDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 import com.example.O_Way.model.Address;
 import com.example.O_Way.model.Location;
@@ -13,8 +14,13 @@ import com.example.O_Way.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -197,5 +203,41 @@ public class VehicleServiceImp implements VehicleService {
                 .message("Vehicle updated successfully")
                 .data(responseDto)
                 .build();
+    }
+
+    @Override
+    public ApiResponse deleteVehicle() {
+
+        // 1️⃣ Get authenticated username
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        // 2️⃣ Find user
+        User user = userRepo.findByName(username);
+
+
+        // 3️⃣ Check if vehicle exists
+        Vehicle vehicle = vehicleRepo.findByUser(user)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Vehicle not found for this user"));
+
+        // 4️⃣ Delete vehicle
+        vehicleRepo.delete(vehicle);
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(HttpStatus.OK.value())
+                .message("Vehicle deleted successfully")
+                .build();
+    }
+
+    @Override
+    public List<VehicleResponseDto> getAllVehicles() {
+        return vehicleRepo.findAll()
+                .stream()
+                .map(vehicle -> modelMapper.map(vehicle, VehicleResponseDto.class))
+                .toList();
     }
 }

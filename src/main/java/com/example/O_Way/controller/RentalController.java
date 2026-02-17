@@ -35,4 +35,11 @@ public class RentalController {
         ApiResponse response = rentalService.getRentalById(id);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{rentalId}")
+    public ResponseEntity<ApiResponse> deleteRental(
+            @PathVariable Long rentalId) {
+
+        return ResponseEntity.ok(rentalService.deleteRental(rentalId));
+    }
 }

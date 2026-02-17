@@ -32,6 +32,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/api/driver/**").hasRole("Driver")
                         .requestMatchers("/api/customer/**").hasRole("Customer")
+                        .requestMatchers("/api/admin/**").hasRole("Admin")
+                        .requestMatchers("/api/agent/**").hasRole("Agent")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

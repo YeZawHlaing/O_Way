@@ -16,6 +16,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,6 +61,30 @@ public class ProfileServiceImp implements ProfileService {
             return profile.getProfilePic();
         }
 
+    }
+    @Override
+    public ApiResponse getMyProfile() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        User user = userRepository.findByName(username);
+
+
+        Profile profile = profileRepository.findByUserName(username)
+                .orElseThrow(() -> new EntityNotFoundException("Profile not found"));
+
+        ProfileResponseDto response =
+                modelMapper.map(profile, ProfileResponseDto.class);
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .message("Profile fetched successfully")
+                .data(response)
+                .build();
     }
 
     @Override
@@ -151,6 +177,39 @@ public class ProfileServiceImp implements ProfileService {
                 .code(200)
                 .data(dto)
                 .message("Profile fetched successfully")
+                .build();
+    }
+
+    @Override
+    public ApiResponse updateProfileByUser(ProfileRequestDto request) {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        User user = userRepository.findByName(username);
+
+        Profile profile = profileRepository.findByUserName(username)
+                .orElseThrow(() -> new EntityNotFoundException("Profile not found"));
+
+        // Update fields
+        profile.setFullName(request.getFullName());
+        profile.setEmail(request.getEmail());
+        profile.setContact(request.getContact());
+        profile.setDob(request.getDob());
+        profile.setGender(request.getGender());
+//        profile.setProfilePic(request.getProfilePic());
+
+        profileRepository.save(profile);
+
+        ProfileResponseDto response =
+                modelMapper.map(profile, ProfileResponseDto.class);
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .message("Profile updated successfully")
+                .data(response)
                 .build();
     }
 }

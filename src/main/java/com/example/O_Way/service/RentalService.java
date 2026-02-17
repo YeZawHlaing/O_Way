@@ -8,4 +8,8 @@ public interface RentalService {
     public ApiResponse createRental(String username, RentalRequestDto request);
 
     ApiResponse getRentalById(Long id);
+
+    ApiResponse deleteRental(Long rentalId);
+
+    ApiResponse getAllRentals();
 }
