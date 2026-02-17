@@ -84,4 +84,18 @@ public class ProfileController {
 
         return ResponseEntity.ok(response);
     }
+
+
+    @GetMapping("/myProfile")
+    public ResponseEntity<ApiResponse> getMyProfile() {
+        return ResponseEntity.ok(profileService.getMyProfile());
+    }
+
+    // UPDATE PROFILE
+    @PatchMapping
+    public ResponseEntity<ApiResponse> updateProfile(
+            @Valid @RequestBody ProfileRequestDto request
+    ) {
+        return ResponseEntity.ok(profileService.updateProfileByUser(request));
+    }
 }

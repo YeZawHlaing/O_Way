@@ -14,10 +14,13 @@ import com.example.O_Way.util.status.Vehicle_Status;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,14 +47,13 @@ public class RentalServiceImp implements RentalService {
         Vehicle vehicle = vehicleRepo.findById(request.getVehicleId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-//        // 3️⃣ Check vehicle availability
-//        if (vehicle.getVehicleStatus() != Vehicle_Status.AVAILABLE) {
-//            throw new IllegalStateException("Vehicle is not available");
-//        }
-
         // 3️⃣ Check driver availability (NOT vehicle status)
         if (vehicle.getDriverStatus() != Driver_Status.AVAILABLE) {
             throw new IllegalStateException("Driver is not available");
+        }
+
+        if (vehicle.getVehicleStatus() != Vehicle_Status.ACCEPTED) {
+            throw new IllegalStateException("Vehicle can't be rent!");
         }
 
         // 4️⃣ Driver is vehicle owner (realistic logic)
@@ -119,6 +121,64 @@ public class RentalServiceImp implements RentalService {
                 .code(200)
                 .message("Rental fetched successfully")
                 .data(responseDto)
+                .build();
+    }
+
+    @Override
+    public ApiResponse deleteRental(Long rentalId) {
+
+        // 1️⃣ Get logged-in username from JWT
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        // 2️⃣ Find rental by ID AND authenticated customer
+        Rental rental = rentalRepo
+                .findByIdAndCustomer_Name(rentalId, username)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Rental not found or not yours"));
+
+        // 3️⃣ Optional: Allow delete only if status is PENDING
+        if (rental.getRentalStatus() != Rental_Status.PENDING) {
+            throw new IllegalStateException("Only pending rentals can be deleted");
+        }
+
+        // 4️⃣ Delete
+        rentalRepo.delete(rental);
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .message("Rental deleted successfully")
+                .build();
+    }
+
+    @Override
+    public ApiResponse getAllRentals() {
+
+        List<Rental> rentals = rentalRepo.findAll();
+
+        List<RentalResponseDto> responseList = rentals.stream().map(rental -> {
+
+            RentalResponseDto dto = modelMapper.map(rental, RentalResponseDto.class);
+
+            dto.setCustomerId(rental.getCustomer().getId());
+            dto.setVehicleId(rental.getVehicle().getId());
+
+            if (rental.getDriver() != null) {
+                dto.setDriverId(rental.getDriver().getId());
+            }
+
+            return dto;
+
+        }).toList();
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .message("All rentals fetched successfully")
+                .data(responseList)
                 .build();
     }
 }

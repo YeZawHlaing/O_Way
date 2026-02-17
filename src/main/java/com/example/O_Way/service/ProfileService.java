@@ -17,4 +17,9 @@ public interface ProfileService {
 
     public ApiResponse getProfileByUsername(String username);
 
+    ApiResponse updateProfileByUser(ProfileRequestDto request);
+
+    public ApiResponse getMyProfile();
+
+
 }
