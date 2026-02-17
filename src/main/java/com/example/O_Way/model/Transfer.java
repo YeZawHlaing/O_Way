@@ -1,13 +1,12 @@
 package com.example.O_Way.model;
 
-import com.example.O_Way.util.status.PaymentMethod;
-import com.example.O_Way.util.status.PaymentStatus;
+import com.example.O_Way.util.status.TransferStatus;
+import com.example.O_Way.util.status.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -16,35 +15,29 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payment {
+public class Transfer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Rental this payment belongs to
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rental_id", nullable = false)
-    private Rental rental;
+    @JoinColumn(name = "from_wallet_id", nullable = false)
+    private Wallet fromWallet;
 
-    // The transfer that moved the money
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transfer_id")
-    private Transfer transfer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_wallet_id", nullable = false)
+    private Wallet toWallet;
 
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
-    private PaymentMethod method;
+    @Column(nullable = false)
+    private TransferStatus transferStatus;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
-    private PaymentStatus status;
+    private Type type;
 
-    @Column(nullable = false)
     private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 }
