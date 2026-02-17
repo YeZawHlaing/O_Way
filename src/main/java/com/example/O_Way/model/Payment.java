@@ -27,11 +27,6 @@ public class Payment {
     @JoinColumn(name = "rental_id", nullable = false)
     private Rental rental;
 
-    // The transfer that moved the money
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transfer_id")
-    private Transfer transfer;
-
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
@@ -47,4 +42,11 @@ public class Payment {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private O_Way_Pay oWayPay;
+
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private K_Pay kPay;
+
 }
