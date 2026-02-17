@@ -2,7 +2,9 @@ package com.example.O_Way.controller;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.ProfileRequestDto;
+import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 import com.example.O_Way.service.ProfileService;
+import com.example.O_Way.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -13,12 +15,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/customer")
 @RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final VehicleService vehicleService;
 
     @PostMapping("/profile")
     public ResponseEntity<ApiResponse> createProfile(
@@ -97,5 +102,10 @@ public class ProfileController {
             @Valid @RequestBody ProfileRequestDto request
     ) {
         return ResponseEntity.ok(profileService.updateProfileByUser(request));
+    }
+
+    @GetMapping("getVehicle")
+    public ResponseEntity<List<VehicleResponseDto>> getVehicles() {
+        return ResponseEntity.ok(vehicleService.getAllVehicles());
     }
 }
