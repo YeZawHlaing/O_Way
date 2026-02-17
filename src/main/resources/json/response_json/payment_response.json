@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "rentalId": 1,
+  "amount": 200.00,
+  "method": "OWAY_PAY",
+  "status": "PENDING",
+  "createdAt": "2026-02-17T23:18:02.376608012",
+  "updatedAt": null
+}
