@@ -25,18 +25,18 @@ public class ProfileController {
     private final ProfileService profileService;
     private final VehicleService vehicleService;
 
-    @PostMapping("/profile")
-    public ResponseEntity<ApiResponse> createProfile(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody ProfileRequestDto request
-    ) {
-
-        String username = userDetails.getUsername();
-
-        ApiResponse response = profileService.createProfile(username, request);
-
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping("/profile")
+//    public ResponseEntity<ApiResponse> createProfile(
+//            @AuthenticationPrincipal UserDetails userDetails,
+//            @Valid @RequestBody ProfileRequestDto request
+//    ) {
+//
+//        String username = userDetails.getUsername();
+//
+//        ApiResponse response = profileService.createProfile(username, request);
+//
+//        return ResponseEntity.ok(response);
+//    }
 
 
     // -------------------------------
@@ -80,7 +80,7 @@ public class ProfileController {
         );
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/getAllprofile")
     public ResponseEntity<ApiResponse> getProfile(Authentication authentication) {
 
         String username = authentication.getName(); // from JWT

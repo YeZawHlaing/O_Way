@@ -117,13 +117,16 @@ public class ProfileServiceImp implements ProfileService {
         profile.setUser(user);
         user.setProfile(profile);
 
+        ProfileResponseDto response =
+                modelMapper.map(profile, ProfileResponseDto.class);
+
         profileRepository.save(profile);
 
         return ApiResponse.builder()
                 .success(1)
                 .code(200)
                 .message("Profile created successfully")
-                .data(null)
+                .data(response)
                 .build();
     }
 

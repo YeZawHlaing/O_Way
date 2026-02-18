@@ -1,21 +1,13 @@
 package com.example.O_Way.controller;
 
-import com.example.O_Way.dto.requestDto.PaymentPatchRequestDto;
-import com.example.O_Way.dto.requestDto.PaymentRequestDto;
-import com.example.O_Way.dto.requestDto.TransactionRequestDto;
-import com.example.O_Way.dto.requestDto.TransferRequestDto;
-import com.example.O_Way.dto.responseDto.PaymentResponseDto;
-import com.example.O_Way.dto.responseDto.TransactionResponseDto;
-import com.example.O_Way.dto.responseDto.TransferResponseDto;
-import com.example.O_Way.dto.responseDto.WalletResponseDto;
+import com.example.O_Way.common.response.ApiResponse;
+import com.example.O_Way.dto.requestDto.*;
+import com.example.O_Way.dto.responseDto.*;
 import com.example.O_Way.model.Wallet;
-import com.example.O_Way.service.PaymentService;
-import com.example.O_Way.service.TransactionService;
-import com.example.O_Way.service.TransferService;
-import com.example.O_Way.service.WalletService;
+import com.example.O_Way.service.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +23,7 @@ public class CustomerController {
     private final PaymentService paymentService;
     private final TransferService transferService;
     private final TransactionService transactionService;
+    private final ProfileService profileService;
 
     @GetMapping("/transaction")
     public List<TransactionResponseDto> getTransactions(
@@ -76,7 +69,18 @@ public class CustomerController {
 
         return ResponseEntity.ok(wallet);
     }
+    @PostMapping("/profile")
+    public ResponseEntity<ApiResponse> createProfile(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ProfileRequestDto request
+    ) {
 
+        String username = userDetails.getUsername();
+
+        ApiResponse response = profileService.createProfile(username, request);
+
+        return ResponseEntity.ok(response);
+    }
     @GetMapping("/myWallet")
     public ResponseEntity<WalletResponseDto> getMyWallet() {
         WalletResponseDto walletDto = walletService.getMyWallet();

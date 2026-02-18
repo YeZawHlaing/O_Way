@@ -23,5 +23,9 @@ public class ProfileResponseDto {
 
     private String profilePic;
 
+    private Double latitude;
+
+    private Double longitude;
+
     private LocationResponseDto location;
 }
