@@ -25,5 +25,7 @@ public class VehicleResponseDto {
 
     private AddressResponseDto address;
 
+    private UserResponseDto user;
+
     private Long userId;
 }

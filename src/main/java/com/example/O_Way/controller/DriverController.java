@@ -1,14 +1,17 @@
 package com.example.O_Way.controller;
 
 
+import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.TransactionRequestDto;
 import com.example.O_Way.dto.requestDto.TransferRequestDto;
 import com.example.O_Way.dto.responseDto.TransactionResponseDto;
 import com.example.O_Way.dto.responseDto.TransferResponseDto;
+import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 import com.example.O_Way.dto.responseDto.WalletResponseDto;
 import com.example.O_Way.model.Wallet;
 import com.example.O_Way.service.TransactionService;
 import com.example.O_Way.service.TransferService;
+import com.example.O_Way.service.VehicleService;
 import com.example.O_Way.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,7 @@ public class DriverController {
     private final WalletService walletService;
     private final TransferService transferService;
     private final TransactionService transactionService;
+    private final VehicleService vehicleService;
 
     @GetMapping("/transaction")
     public List<TransactionResponseDto> getTransactions(
@@ -58,5 +62,15 @@ public class DriverController {
     public ResponseEntity<WalletResponseDto> getMyWallet() {
         WalletResponseDto walletDto = walletService.getMyWallet();
         return ResponseEntity.ok(walletDto);
+    }
+
+    @GetMapping("getVehicle")
+    public ResponseEntity<List<VehicleResponseDto>> getVehicles() {
+        return ResponseEntity.ok(vehicleService.getAllVehicles());
+    }
+
+    @GetMapping("/myProfile")
+    public ResponseEntity<ApiResponse> getMyVehicle() {
+        return ResponseEntity.ok(vehicleService.getMyVehicle());
     }
 }

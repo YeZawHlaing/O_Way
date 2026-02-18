@@ -24,6 +24,12 @@ public class CustomerController {
     private final TransferService transferService;
     private final TransactionService transactionService;
     private final ProfileService profileService;
+    private final VehicleService vehicleService;
+
+    @GetMapping("getVehicle")
+    public ResponseEntity<List<VehicleResponseDto>> getVehicles() {
+        return ResponseEntity.ok(vehicleService.getAllVehicles());
+    }
 
     @GetMapping("/transaction")
     public List<TransactionResponseDto> getTransactions(

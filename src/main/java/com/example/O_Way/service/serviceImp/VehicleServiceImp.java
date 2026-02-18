@@ -2,12 +2,10 @@ package com.example.O_Way.service.serviceImp;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.VehicleRequestDto;
+import com.example.O_Way.dto.responseDto.ProfileResponseDto;
 import com.example.O_Way.dto.responseDto.UserResponseDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
-import com.example.O_Way.model.Address;
-import com.example.O_Way.model.Location;
-import com.example.O_Way.model.User;
-import com.example.O_Way.model.Vehicle;
+import com.example.O_Way.model.*;
 import com.example.O_Way.repo.UserRepo;
 import com.example.O_Way.repo.VehicleRepo;
 import com.example.O_Way.service.VehicleService;
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -240,4 +239,31 @@ public class VehicleServiceImp implements VehicleService {
                 .map(vehicle -> modelMapper.map(vehicle, VehicleResponseDto.class))
                 .toList();
     }
+
+    @Override
+    public ApiResponse getMyVehicle() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        User user = userRepo.findByName(username);
+
+        Optional<Vehicle> vehicle= vehicleRepo.findByUserName(username);
+
+//        Profile profile = profileRepository.findByUserName(username)
+//                .orElseThrow(() -> new EntityNotFoundException("Profile not found"));
+
+        VehicleResponseDto response =
+                modelMapper.map(vehicle, VehicleResponseDto.class);
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .message("Vehicle fetched successfully")
+                .data(response)
+                .build();
+    }
+
 }

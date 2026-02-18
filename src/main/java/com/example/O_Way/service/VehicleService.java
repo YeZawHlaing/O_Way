@@ -20,6 +20,9 @@ public interface VehicleService {
 
     List<VehicleResponseDto> getAllVehicles();
 
+    public ApiResponse getMyVehicle();
+
+
 
 
 
