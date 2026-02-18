@@ -82,7 +82,101 @@ paths:
       responses:
         "200":
           description: Profile fetched successfully
+  # =========================
+  # CUSTOMER - TRANSFER
+  # =========================
+  /api/customer/transfer:
+    post:
+      summary: Transfer money from customer wallet
+      tags: [Transfer]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequestDto'
+      responses:
+        "200":
+          description: Transfer successful
 
+  # =========================
+  # CUSTOMER - PAYMENT
+  # =========================
+  /api/customer/payment:
+    post:
+      summary: Create payment (Customer)
+      tags: [Payment]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequestDto'
+      responses:
+        "200":
+          description: Payment created successfully
+
+  /api/customer/{id}:
+    patch:
+      summary: Update payment (Customer)
+      tags: [Payment]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentPatchRequestDto'
+      responses:
+        "200":
+          description: Payment updated successfully
+
+  # =========================
+  # CUSTOMER - TRANSACTION
+  # =========================
+  /api/customer/transaction:
+    get:
+      summary: Get my transaction history
+      tags: [Transaction]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Transaction list fetched
+
+  # =========================
+  # CUSTOMER - WALLET
+  # =========================
+  /api/customer/create:
+    post:
+      summary: Create wallet for current customer
+      tags: [Wallet]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Wallet created successfully
+
+  /api/customer/myWallet:
+    get:
+      summary: Get my wallet details
+      tags: [Wallet]
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Wallet fetched successfully
   # =========================
   # VEHICLE (DRIVER)
   # =========================
