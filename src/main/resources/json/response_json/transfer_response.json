@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "fromWalletId": 3,
+  "toWalletId": 1,
+  "amount": 3000.00,
+  "transferStatus": "COMPLETED",
+  "type": "TOPUP",
+  "createdAt": "2026-02-18T00:03:12.699599284"
+}
