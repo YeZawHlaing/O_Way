@@ -2,13 +2,17 @@ package com.example.O_Way.controller;
 
 
 import com.example.O_Way.common.response.ApiResponse;
+import com.example.O_Way.dto.requestDto.VehicleRequestDto;
 import com.example.O_Way.dto.responseDto.UserResponseDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 import com.example.O_Way.model.Roles;
 import com.example.O_Way.service.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +27,19 @@ public class AdminController {
     private final RolesService rolesService;
     private final ProfileService profileService;
     private final RentalService rentalService;
+
+    @PatchMapping("/updateVehicle")
+    public ResponseEntity<ApiResponse> updateVehicle(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody VehicleRequestDto request
+    ) {
+
+        String username = userDetails.getUsername();
+
+        return ResponseEntity.ok(
+                vehicleService.updateVehicles(username, request)
+        );
+    }
 
     @PostMapping("/roles")
     public ResponseEntity<Roles> createRole(@RequestBody Roles role) {
