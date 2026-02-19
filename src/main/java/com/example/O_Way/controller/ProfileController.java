@@ -104,8 +104,8 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.updateProfileByUser(request));
     }
 
-    @GetMapping("getVehicle")
-    public ResponseEntity<List<VehicleResponseDto>> getVehicles() {
-        return ResponseEntity.ok(vehicleService.getAllVehicles());
-    }
+//    @GetMapping("/getVehicle")
+//    public ResponseEntity<List<VehicleResponseDto>> getVehicles() {
+//        return ResponseEntity.ok(vehicleService.getAllVehicles());
+//    }
 }

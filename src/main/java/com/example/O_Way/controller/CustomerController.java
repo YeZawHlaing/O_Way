@@ -26,7 +26,7 @@ public class CustomerController {
     private final ProfileService profileService;
     private final VehicleService vehicleService;
 
-    @GetMapping("getVehicle")
+    @GetMapping("/getVehicle")
     public ResponseEntity<List<VehicleResponseDto>> getVehicles() {
         return ResponseEntity.ok(vehicleService.getAllVehicles());
     }

@@ -9,10 +9,7 @@ import com.example.O_Way.dto.responseDto.TransferResponseDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 import com.example.O_Way.dto.responseDto.WalletResponseDto;
 import com.example.O_Way.model.Wallet;
-import com.example.O_Way.service.TransactionService;
-import com.example.O_Way.service.TransferService;
-import com.example.O_Way.service.VehicleService;
-import com.example.O_Way.service.WalletService;
+import com.example.O_Way.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,6 +28,7 @@ public class DriverController {
     private final TransferService transferService;
     private final TransactionService transactionService;
     private final VehicleService vehicleService;
+    private final RentalService rentalService;
 
     @GetMapping("/transaction")
     public List<TransactionResponseDto> getTransactions(
@@ -72,5 +70,15 @@ public class DriverController {
     @GetMapping("/myProfile")
     public ResponseEntity<ApiResponse> getMyVehicle() {
         return ResponseEntity.ok(vehicleService.getMyVehicle());
+    }
+
+    @GetMapping("/rentals")
+    public ResponseEntity<ApiResponse> getMyRentals(
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        String driverName = userDetails.getUsername();
+        ApiResponse response = rentalService.getRentalByDriverName(driverName);
+
+        return ResponseEntity.ok(response);
     }
 }

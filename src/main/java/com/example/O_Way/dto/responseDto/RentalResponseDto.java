@@ -28,4 +28,6 @@ public class RentalResponseDto {
 
     private Double dropLatitude;
     private Double dropLongitude;
+
+    private ProfileResponseDto profile;
 }

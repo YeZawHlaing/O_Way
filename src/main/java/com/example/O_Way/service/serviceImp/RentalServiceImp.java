@@ -2,6 +2,7 @@ package com.example.O_Way.service.serviceImp;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.RentalRequestDto;
+import com.example.O_Way.dto.responseDto.ProfileResponseDto;
 import com.example.O_Way.dto.responseDto.RentalResponseDto;
 import com.example.O_Way.model.*;
 import com.example.O_Way.repo.RentalRepo;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -179,6 +181,58 @@ public class RentalServiceImp implements RentalService {
                 .code(200)
                 .message("All rentals fetched successfully")
                 .data(responseList)
+                .build();
+    }
+
+
+    @Override
+    public ApiResponse getRentalByDriverName(String username) {
+
+        // 1️⃣ Find driver by authenticated username
+        User driver = userRepo.findByName(username);
+        if (driver == null) {
+            return ApiResponse.builder()
+                    .success(0)
+                    .code(404)
+                    .message("Driver not found")
+                    .build();
+        }
+
+        // 2️⃣ Get vehicle (one driver = one vehicle)
+        Vehicle vehicle = vehicleRepo.findByUser(driver)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found for driver"));
+
+        // 3️⃣ Get all rentals for this vehicle
+        List<Rental> rentals = rentalRepo.findByVehicleId(vehicle.getId());
+
+        // 4️⃣ Map Rental → RentalResponseDto
+        List<RentalResponseDto> rentalDtos = rentals.stream().map(rental -> {
+            RentalResponseDto dto = modelMapper.map(rental, RentalResponseDto.class);
+
+            // Set vehicle & driver
+            dto.setVehicleId(vehicle.getId());
+            dto.setDriverId(driver.getId());
+
+            // Map customer data manually
+            ProfileResponseDto customerDto = new ProfileResponseDto();
+            customerDto.setId(rental.getCustomer().getId());
+            customerDto.setFullName(rental.getCustomer().getName());
+            customerDto.setEmail(rental.getCustomer().getProfile() != null ?
+                    rental.getCustomer().getProfile().getEmail() : null);
+            customerDto.setContact(rental.getCustomer().getProfile() != null ?
+                    rental.getCustomer().getProfile().getContact() : null);
+
+//            dto.setCustomer(customerDto);
+            dto.setProfile(customerDto);
+
+            return dto;
+        }).collect(Collectors.toList());
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .data(rentalDtos)
+                .message("Driver rentals fetched successfully")
                 .build();
     }
 }

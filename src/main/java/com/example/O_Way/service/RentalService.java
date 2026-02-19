@@ -12,4 +12,6 @@ public interface RentalService {
     ApiResponse deleteRental(Long rentalId);
 
     ApiResponse getAllRentals();
+
+    ApiResponse getRentalByDriverName(String username);
 }
