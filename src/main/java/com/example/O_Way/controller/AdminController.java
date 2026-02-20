@@ -28,18 +28,18 @@ public class AdminController {
     private final ProfileService profileService;
     private final RentalService rentalService;
 
-    @PatchMapping("/updateVehicle")
-    public ResponseEntity<ApiResponse> updateVehicle(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody VehicleRequestDto request
-    ) {
-
-        String username = userDetails.getUsername();
-
-        return ResponseEntity.ok(
-                vehicleService.updateVehicles(username, request)
-        );
-    }
+//    @PatchMapping("/updateVehicle")
+//    public ResponseEntity<ApiResponse> updateVehicle(
+//            @AuthenticationPrincipal UserDetails userDetails,
+//             @RequestBody VehicleResponseDto request
+//    ) {
+//
+//        String username = userDetails.getUsername();
+//
+//        return ResponseEntity.ok(
+//                vehicleService.updateVehicles(username, request)
+//        );
+//    }
 
     @PostMapping("/roles")
     public ResponseEntity<Roles> createRole(@RequestBody Roles role) {

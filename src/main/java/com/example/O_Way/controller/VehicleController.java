@@ -2,6 +2,7 @@ package com.example.O_Way.controller;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.VehicleRequestDto;
+import com.example.O_Way.dto.requestDto.VehicleUpdateDto;
 import com.example.O_Way.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class VehicleController {
     @PatchMapping
     public ResponseEntity<ApiResponse> updateVehicle(
             @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody VehicleRequestDto request
+            @RequestBody VehicleUpdateDto request
     ) {
 
         String username = userDetails.getUsername();

@@ -2,6 +2,7 @@ package com.example.O_Way.service;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.VehicleRequestDto;
+import com.example.O_Way.dto.requestDto.VehicleUpdateDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface VehicleService {
 
     public ApiResponse getVehicleById(final Long userId);
 
-    ApiResponse updateVehicles(String username, VehicleRequestDto request);
+    ApiResponse updateVehicles(String username, VehicleUpdateDto request);
 
     ApiResponse deleteVehicle();
 

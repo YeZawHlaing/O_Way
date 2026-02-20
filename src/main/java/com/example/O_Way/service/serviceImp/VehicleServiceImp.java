@@ -2,6 +2,7 @@ package com.example.O_Way.service.serviceImp;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.VehicleRequestDto;
+import com.example.O_Way.dto.requestDto.VehicleUpdateDto;
 import com.example.O_Way.dto.responseDto.ProfileResponseDto;
 import com.example.O_Way.dto.responseDto.UserResponseDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
@@ -144,7 +145,7 @@ public class VehicleServiceImp implements VehicleService {
     }
 
     @Override
-    public ApiResponse updateVehicles(String username, VehicleRequestDto request) {
+    public ApiResponse updateVehicles(String username, VehicleUpdateDto request) {
 
         // 1️⃣ Get user
         User user = userRepo.findByName(username);
