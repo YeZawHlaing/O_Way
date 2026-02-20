@@ -16,8 +16,8 @@ public class ModelMapperConfig {
         // Configure custom mappings for Profile → ProfileResponseDto
         modelMapper.typeMap(Profile.class, ProfileResponseDto.class)
                 .addMapping(Profile::getFullName, ProfileResponseDto::setFullName)
-                .addMapping(Profile::getContact, ProfileResponseDto::setContact)
-                .addMapping(Profile::getLocation, ProfileResponseDto::setLatitude);
+                .addMapping(Profile::getContact, ProfileResponseDto::setContact);
+//                .addMapping(Profile::getLocation, ProfileResponseDto::setLatitude);
         // Uncomment and map the rest if needed
         //.addMapping(Profile::getLon, ProfileResponseDto::setLongitude)
         //.addMapping(Profile::getProfilePic, ProfileResponseDto::setProfilePic)
