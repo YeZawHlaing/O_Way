@@ -16,7 +16,7 @@ public class RentalRequestDto {
     private Long vehicleId;
 
     @NotNull
-    private Long distance;
+    private double distance;
 
     @NotNull
     private Double pickupLatitude;

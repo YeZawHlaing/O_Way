@@ -34,8 +34,7 @@ public class RentalServiceImp implements RentalService {
     private final VehicleRepo vehicleRepo;
     private final ModelMapper modelMapper;
 
-    private static final double PRICE_PER_KM = 500;
-
+    private static final double PRICE_PER_KM = 700;
     // =========================================
     // CREATE RENTAL
     // =========================================
@@ -73,6 +72,8 @@ public class RentalServiceImp implements RentalService {
 
         // 5️⃣ Calculate cost
         double estimateCost = request.getDistance() * PRICE_PER_KM;
+        System.out.println(rental.getDistance());
+        System.out.println(estimateCost);
         rental.setEstimate_cost(estimateCost);
 
         rental.setPaid_at(null);
@@ -93,6 +94,7 @@ public class RentalServiceImp implements RentalService {
         responseDto.setCustomerId(customer.getId());
         responseDto.setVehicleId(vehicle.getId());
         responseDto.setDriverId(driver.getId());
+        responseDto.setEstimateCost(rental.getEstimate_cost());
 
         return ApiResponse.builder()
                 .success(1)
@@ -212,6 +214,7 @@ public class RentalServiceImp implements RentalService {
             // Set vehicle & driver
             dto.setVehicleId(vehicle.getId());
             dto.setDriverId(driver.getId());
+            dto.setEstimateCost(rental.getEstimate_cost());
 
             // Map customer data manually
             ProfileResponseDto customerDto = new ProfileResponseDto();
@@ -271,6 +274,7 @@ public class RentalServiceImp implements RentalService {
             dto.setCustomerId(customer.getId());
             dto.setVehicleId(rental.getVehicle().getId());
             dto.setDriverId(rental.getVehicle().getUser().getId());
+            dto.setEstimateCost(rental.getEstimate_cost());
 
             return dto;
 

@@ -22,7 +22,7 @@ public class Rental {
     private Long id;
 
     @Column
-    private Long distance;
+    private double distance;
 
     @Column
     private LocalDateTime rental_time;

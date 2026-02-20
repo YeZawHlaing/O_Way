@@ -15,7 +15,7 @@ public class RentalResponseDto {
     private Long driverId;
     private Long vehicleId;
 
-    private Long distance;
+    private double distance;
     private double estimateCost;
 
     private LocalDateTime rentalTime;
