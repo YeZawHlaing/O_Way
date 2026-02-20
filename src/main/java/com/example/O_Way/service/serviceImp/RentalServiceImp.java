@@ -235,4 +235,52 @@ public class RentalServiceImp implements RentalService {
                 .message("Driver rentals fetched successfully")
                 .build();
     }
+
+    @Override
+    public ApiResponse getRentalByCustomerName(String username) {
+
+        // 1️⃣ Find customer
+        User customer = userRepo.findByName(username);
+
+        if (customer == null) {
+            return ApiResponse.builder()
+                    .success(0)
+                    .code(404)
+                    .message("Customer not found")
+                    .build();
+        }
+
+        // 2️⃣ Get rentals by customer
+        List<Rental> rentals = rentalRepo.findByCustomer(customer);
+
+        if (rentals.isEmpty()) {
+            return ApiResponse.builder()
+                    .success(1)
+                    .code(200)
+                    .message("No rentals found")
+                    .data(List.of())
+                    .build();
+        }
+
+        // 3️⃣ Map to DTO
+        List<RentalResponseDto> rentalDtos = rentals.stream().map(rental -> {
+
+            RentalResponseDto dto = modelMapper.map(rental, RentalResponseDto.class);
+
+            // Set IDs manually (safe way)
+            dto.setCustomerId(customer.getId());
+            dto.setVehicleId(rental.getVehicle().getId());
+            dto.setDriverId(rental.getVehicle().getUser().getId());
+
+            return dto;
+
+        }).toList();
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .data(rentalDtos)
+                .message("Customer rentals fetched successfully")
+                .build();
+    }
 }

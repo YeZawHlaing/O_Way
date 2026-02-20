@@ -1,0 +1,35 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "customerId": 1,
+      "distance": 12,
+      "driverId": 2,
+      "dropLatitude": 16.8661,
+      "dropLongitude": 96.1951,
+      "estimateCost": 0.0,
+      "id": 1,
+      "paidAt": null,
+      "pickupLatitude": 16.8409,
+      "pickupLongitude": 96.1735,
+      "profile": {
+        "contact": "09123456789",
+        "dob": null,
+        "email": "khant@gmail.com",
+        "fullName": "Soe Khant",
+        "gender": null,
+        "id": 1,
+        "latitude": null,
+        "location": null,
+        "longitude": null,
+        "profilePic": null
+      },
+      "rentalStatus": "PENDING",
+      "rentalTime": "2026-02-17T20:13:24.348576",
+      "vehicleId": 1
+    }
+  ],
+  "message": "Driver rentals fetched successfully",
+  "meta": null,
+  "success": 1
+}

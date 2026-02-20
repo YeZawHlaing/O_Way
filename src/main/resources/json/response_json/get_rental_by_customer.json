@@ -1,0 +1,40 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "customerId": 1,
+      "distance": 12,
+      "driverId": 2,
+      "dropLatitude": 16.8661,
+      "dropLongitude": 96.1951,
+      "estimateCost": 0.0,
+      "id": 1,
+      "paidAt": null,
+      "pickupLatitude": 16.8409,
+      "pickupLongitude": 96.1735,
+      "profile": null,
+      "rentalStatus": "PENDING",
+      "rentalTime": "2026-02-17T20:13:24.348576",
+      "vehicleId": 1
+    },
+    {
+      "customerId": 1,
+      "distance": 20,
+      "driverId": 5,
+      "dropLatitude": 16.8661,
+      "dropLongitude": 96.1951,
+      "estimateCost": 0.0,
+      "id": 2,
+      "paidAt": null,
+      "pickupLatitude": 16.8409,
+      "pickupLongitude": 96.1735,
+      "profile": null,
+      "rentalStatus": "PENDING",
+      "rentalTime": "2026-02-18T03:31:46.006142",
+      "vehicleId": 3
+    }
+  ],
+  "message": "Customer rentals fetched successfully",
+  "meta": null,
+  "success": 1
+}

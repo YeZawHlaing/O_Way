@@ -14,4 +14,6 @@ public interface RentalService {
     ApiResponse getAllRentals();
 
     ApiResponse getRentalByDriverName(String username);
+
+    ApiResponse getRentalByCustomerName(String username);
 }

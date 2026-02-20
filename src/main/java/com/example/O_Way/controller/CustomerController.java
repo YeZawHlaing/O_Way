@@ -25,6 +25,7 @@ public class CustomerController {
     private final TransactionService transactionService;
     private final ProfileService profileService;
     private final VehicleService vehicleService;
+    private final RentalService rentalService;
 
     @GetMapping("/getVehicle")
     public ResponseEntity<List<VehicleResponseDto>> getVehicles() {
@@ -91,5 +92,17 @@ public class CustomerController {
     public ResponseEntity<WalletResponseDto> getMyWallet() {
         WalletResponseDto walletDto = walletService.getMyWallet();
         return ResponseEntity.ok(walletDto);
+    }
+
+    @GetMapping("/rentals")
+    public ResponseEntity<ApiResponse> getMyRentals(
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        String username = userDetails.getUsername();
+
+        ApiResponse response =
+                rentalService.getRentalByCustomerName(username);
+
+        return ResponseEntity.ok(response);
     }
 }
