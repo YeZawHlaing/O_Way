@@ -287,4 +287,69 @@ public class RentalServiceImp implements RentalService {
                 .message("Customer rentals fetched successfully")
                 .build();
     }
+
+    @Override
+    public ApiResponse updateRentalStatusById(Long rentalId,
+                                          String username,
+                                          String status) {
+
+        // 1️⃣ Find rental
+        Rental rental = rentalRepo.findById(rentalId)
+                .orElseThrow(() -> new RuntimeException("Rental not found"));
+
+        // 2️⃣ Validate driver ownership
+        User driver = rental.getVehicle().getUser();
+
+        if (!driver.getName().equals(username)) {
+            return ApiResponse.builder()
+                    .success(0)
+                    .code(403)
+                    .message("You are not authorized to update this rental")
+                    .build();
+        }
+
+        // 3️⃣ Validate current status
+        if (rental.getRentalStatus() != Rental_Status.PENDING) {
+            return ApiResponse.builder()
+                    .success(0)
+                    .code(400)
+                    .message("Only PENDING rentals can be updated")
+                    .build();
+        }
+
+        // 4️⃣ Convert String → Enum safely
+        Rental_Status newStatus;
+
+        try {
+            newStatus = Rental_Status.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return ApiResponse.builder()
+                    .success(0)
+                    .code(400)
+                    .message("Invalid rental status")
+                    .build();
+        }
+
+        // 5️⃣ Only allow ACCEPTED or DECLINED
+        if (newStatus != Rental_Status.ACCEPTED &&
+                newStatus != Rental_Status.DECLINED) {
+
+            return ApiResponse.builder()
+                    .success(0)
+                    .code(400)
+                    .message("Status must be ACCEPTED or DECLINED")
+                    .build();
+        }
+
+        // 6️⃣ Update status
+        rental.setRentalStatus(newStatus);
+        rentalRepo.save(rental);
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .message("Rental status updated to " + newStatus)
+                .data(rental.getId())
+                .build();
+    }
 }

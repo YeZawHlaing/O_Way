@@ -81,4 +81,18 @@ public class DriverController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/rentals/{rentalId}/status")
+    public ResponseEntity<ApiResponse> updateRentalStatus(
+            @PathVariable Long rentalId,
+            @RequestParam String status,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        String username = userDetails.getUsername();
+
+        ApiResponse response =
+                rentalService.updateRentalStatusById(rentalId, username, status);
+
+        return ResponseEntity.ok(response);
+    }
 }
