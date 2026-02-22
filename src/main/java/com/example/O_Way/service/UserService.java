@@ -14,4 +14,5 @@ public interface UserService {
 
     public ApiResponse createUser(UserRequestDto request);
     List<UserResponseDto> getUsers();
+    ApiResponse getAllAgents();
 }

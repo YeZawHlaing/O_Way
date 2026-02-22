@@ -26,6 +26,7 @@ public class CustomerController {
     private final ProfileService profileService;
     private final VehicleService vehicleService;
     private final RentalService rentalService;
+    private final UserService userService;
 
     @GetMapping("/getVehicle")
     public ResponseEntity<List<VehicleResponseDto>> getVehicles() {
@@ -102,6 +103,14 @@ public class CustomerController {
 
         ApiResponse response =
                 rentalService.getRentalByCustomerName(username);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/agents")
+    public ResponseEntity<ApiResponse> getAllAgents() {
+
+        ApiResponse response = userService.getAllAgents();
 
         return ResponseEntity.ok(response);
     }

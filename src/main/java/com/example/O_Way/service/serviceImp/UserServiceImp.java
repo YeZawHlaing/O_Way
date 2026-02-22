@@ -60,5 +60,32 @@ public class UserServiceImp implements UserService {
                 .map(user -> modelMapper.map(user, UserResponseDto.class))
                 .toList();
     }
+    @Override
+    public ApiResponse getAllAgents() {
+
+        // 1️⃣ Get users with role "Agent"
+        List<User> agents = userRepository.findByRoles_Name("Agent");
+
+        if (agents.isEmpty()) {
+            return ApiResponse.builder()
+                    .success(1)
+                    .code(200)
+                    .message("No agents found")
+                    .data(List.of())
+                    .build();
+        }
+
+        // 2️⃣ Convert Entity → DTO
+        List<UserResponseDto> responseList = agents.stream()
+                .map(user -> modelMapper.map(user, UserResponseDto.class))
+                .toList();
+
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .message("Agents fetched successfully")
+                .data(responseList)
+                .build();
+    }
 
 }
