@@ -129,41 +129,31 @@ public class TransferServiceImp implements TransferService {
     @Transactional
     public TransferResponseDto transferForRental(Long rentalId) {
 
-        String username = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
+        // 1️⃣ Get authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
 
-        User user = userRepository.findByName(username);
+        User authenticatedUser = userRepository.findByName(username);
 
 
-        // 1️⃣ Get rental
+        // 2️⃣ Get rental
         Rental rental = rentalRepo.findById(rentalId)
                 .orElseThrow(() -> new EntityNotFoundException("Rental not found"));
 
-        // 2️⃣ Validate customer ownership
-//        if (!rental.getCustomer().getName().equals(username)) {
-//            throw new RuntimeException("Unauthorized rental payment attempt");
-//        }
-//        if (!rental.getCustomer().getName().equals(username)) {
-//            throw new RuntimeException("Unauthorized rental payment attempt");
-//        }
-        if (!rental.getCustomer().getId().equals(user.getId())) {
+//         3️⃣ Validate customer ownership by ID
+        if (!rental.getCustomer().getId().equals(authenticatedUser.getId())) {
             throw new RuntimeException("Unauthorized rental payment attempt");
         }
 
-        System.out.println("Username: " + username);
-        System.out.println("Rental customer: " + rental.getCustomer().getName());
-
-        // 3️⃣ Get payment for this rental
-        Payment payment = paymentRepo.findByRental(rental)
+        // 4️⃣ Get payment for this rental
+        Payment payment = paymentRepo.findById(rentalId)
                 .orElseThrow(() -> new EntityNotFoundException("Payment not found for this rental"));
 
         if (payment.getStatus() == PaymentStatus.PAID) {
             throw new RuntimeException("Payment already completed");
         }
 
-        // 4️⃣ Get wallets
+        // 5️⃣ Get wallets
         Wallet fromWallet = walletRepo.findByUser(rental.getCustomer())
                 .orElseThrow(() -> new EntityNotFoundException("Customer wallet not found"));
 
@@ -172,19 +162,19 @@ public class TransferServiceImp implements TransferService {
 
         BigDecimal amount = payment.getAmount();
 
-        // 5️⃣ Validate balance
+        // 6️⃣ Validate balance
         if (fromWallet.getBalance().compareTo(amount) < 0) {
             throw new RuntimeException("Insufficient balance");
         }
 
-        // 6️⃣ Update balances
+        // 7️⃣ Update balances
         fromWallet.setBalance(fromWallet.getBalance().subtract(amount));
         toWallet.setBalance(toWallet.getBalance().add(amount));
 
         walletRepo.save(fromWallet);
         walletRepo.save(toWallet);
 
-        // 7️⃣ Create Transfer
+        // 8️⃣ Create Transfer
         Transfer transfer = new Transfer();
         transfer.setFromWallet(fromWallet);
         transfer.setToWallet(toWallet);
@@ -195,8 +185,7 @@ public class TransferServiceImp implements TransferService {
 
         Transfer savedTransfer = transferRepo.save(transfer);
 
-        // 8️⃣ Create Ledger Transactions
-
+        // 9️⃣ Create Ledger Transactions
         // DEBIT
         Transaction debit = new Transaction();
         debit.setWallet(fromWallet);
@@ -221,23 +210,23 @@ public class TransferServiceImp implements TransferService {
         credit.setCreatedAt(LocalDateTime.now());
         transactionRepo.save(credit);
 
-        // 9️⃣ Update Payment
+        // 🔟 Update Payment
         payment.setStatus(PaymentStatus.PAID);
         payment.setUpdatedAt(LocalDateTime.now());
         paymentRepo.save(payment);
 
-        // 🔟 Update Rental
-        rental.setPaid_at(LocalDateTime.now());
-        rental.setRentalStatus(Rental_Status.COMPLETED);
-        rentalRepo.save(rental);
+        // 1️⃣1️⃣ Update Rental
+//        rental.setPaid_at(LocalDateTime.now());
+//        rental.setRentalStatus(Rental_Status.COMPLETED);
+//        rentalRepo.save(rental);
 
-        // 1️⃣1️⃣ Create O_Way_Pay link
+        // 1️⃣2️⃣ Create O_Way_Pay link
         O_Way_Pay link = new O_Way_Pay();
         link.setPayment(payment);
         link.setTransfer(savedTransfer);
         oWayPayRepo.save(link);
 
-        // 1️⃣2️⃣ Return response
+        // 1️⃣3️⃣ Return response
         return new TransferResponseDto(
                 savedTransfer.getId(),
                 fromWallet.getId(),
