@@ -1,0 +1,18 @@
+{
+  "code": 200,
+  "data": {
+    "id": 5,
+    "rentalId": 9,
+    "amount": 10500.00,
+    "method": "OWAY_PAY",
+    "status": "PAID",
+    "createdAt": "2026-02-24T00:08:51.497225",
+    "updatedAt": "2026-02-24T00:29:48.397342",
+    "driverWalletId": null,
+    "driverId": 12,
+    "customerId": 1
+  },
+  "message": "Payment fetched successfully",
+  "meta": null,
+  "success": 1
+}

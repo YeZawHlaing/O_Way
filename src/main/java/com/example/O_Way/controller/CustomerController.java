@@ -123,4 +123,10 @@ public class CustomerController {
 
         return ResponseEntity.ok(response);
     }
+    // Get payment by rental ID
+    @GetMapping("/rental/{rentalId}")
+    public ResponseEntity<ApiResponse> getPaymentByRental(@PathVariable Long rentalId) {
+        ApiResponse response = paymentService.getPaymentByRentalId(rentalId);
+        return ResponseEntity.ok(response);
+    }
 }

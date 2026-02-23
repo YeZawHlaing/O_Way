@@ -120,4 +120,35 @@ public class PaymentServiceImp implements PaymentService {
 
         return dto;
     }
+
+    @Override
+    public ApiResponse getPaymentByRentalId(Long rentalId) {
+
+        // 1. Fetch the rental or throw exception
+        Rental rental = rentalRepo.findById(rentalId)
+                .orElseThrow(() -> new EntityNotFoundException("Rental not found"));
+
+        // 2. Fetch the payment associated with this rental
+        Payment payment = paymentRepo.findByRentalId(rentalId)
+                .orElseThrow(() -> new EntityNotFoundException("Payment not found for this rental"));
+
+        // 3. Map entity to DTO
+        PaymentResponseDto responseDto = modelMapper.map(payment, PaymentResponseDto.class);
+
+        // 4. Add related IDs
+        responseDto.setRentalId(rental.getId());
+        responseDto.setCustomerId(rental.getCustomer().getId());
+
+        if (rental.getDriver() != null) {
+            responseDto.setDriverId(rental.getDriver().getId());
+        }
+
+        // 5. Build ApiResponse
+        return ApiResponse.builder()
+                .success(1)
+                .code(200)
+                .message("Payment fetched successfully")
+                .data(responseDto)
+                .build();
+    }
 }

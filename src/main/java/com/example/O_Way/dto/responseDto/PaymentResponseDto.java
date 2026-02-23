@@ -1,5 +1,6 @@
 package com.example.O_Way.dto.responseDto;
 
+import com.example.O_Way.model.Payment;
 import com.example.O_Way.util.status.PaymentMethod;
 import com.example.O_Way.util.status.PaymentStatus;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,8 @@ public class PaymentResponseDto {
     private LocalDateTime updatedAt;
 
     private Long driverWalletId;
+
+    private Long driverId;
+
+    private Long customerId;
 }

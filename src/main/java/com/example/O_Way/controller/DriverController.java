@@ -29,6 +29,7 @@ public class DriverController {
     private final TransactionService transactionService;
     private final VehicleService vehicleService;
     private final RentalService rentalService;
+    private final PaymentService paymentService;
 
     @GetMapping("/transaction")
     public List<TransactionResponseDto> getTransactions(
@@ -93,6 +94,12 @@ public class DriverController {
         ApiResponse response =
                 rentalService.updateRentalStatusById(rentalId, username, status);
 
+        return ResponseEntity.ok(response);
+    }
+    // Get payment by rental ID
+    @GetMapping("/rental/{rentalId}")
+    public ResponseEntity<ApiResponse> getPaymentByRental(@PathVariable Long rentalId) {
+        ApiResponse response = paymentService.getPaymentByRentalId(rentalId);
         return ResponseEntity.ok(response);
     }
 }
