@@ -29,5 +29,7 @@ public class RentalResponseDto {
     private Double dropLatitude;
     private Double dropLongitude;
 
+    private Long driverWalletId;
+
     private ProfileResponseDto profile;
 }

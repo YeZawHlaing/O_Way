@@ -60,6 +60,12 @@ public class RentalServiceImp implements RentalService {
         // 4️⃣ Driver is vehicle owner (realistic logic)
         User driver = vehicle.getUser();
 
+        Wallet driverWallet = driver.getWallet();
+
+        if (driverWallet == null) {
+            throw new IllegalStateException("Driver wallet not found");
+        }
+
         Rental rental = new Rental();
 
         rental.setCustomer(customer);
@@ -94,6 +100,7 @@ public class RentalServiceImp implements RentalService {
         responseDto.setCustomerId(customer.getId());
         responseDto.setVehicleId(vehicle.getId());
         responseDto.setDriverId(driver.getId());
+        responseDto.setDriverWalletId(driverWallet.getId());
         responseDto.setEstimateCost(rental.getEstimate_cost());
 
         return ApiResponse.builder()
