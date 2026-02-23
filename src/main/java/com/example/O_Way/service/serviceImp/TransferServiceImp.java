@@ -2,18 +2,10 @@ package com.example.O_Way.service.serviceImp;
 
 import com.example.O_Way.dto.requestDto.TransferRequestDto;
 import com.example.O_Way.dto.responseDto.TransferResponseDto;
-import com.example.O_Way.model.Transaction;
-import com.example.O_Way.model.Transfer;
-import com.example.O_Way.model.User;
-import com.example.O_Way.model.Wallet;
-import com.example.O_Way.repo.TransactionRepo;
-import com.example.O_Way.repo.TransferRepo;
-import com.example.O_Way.repo.UserRepo;
-import com.example.O_Way.repo.WalletRepo;
+import com.example.O_Way.model.*;
+import com.example.O_Way.repo.*;
 import com.example.O_Way.service.TransferService;
-import com.example.O_Way.util.status.Direction;
-import com.example.O_Way.util.status.TransactionStatus;
-import com.example.O_Way.util.status.TransferStatus;
+import com.example.O_Way.util.status.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,6 +26,9 @@ public class TransferServiceImp implements TransferService {
     private final UserRepo userRepository;
     private final ModelMapper modelMapper;
     private final TransactionRepo transactionRepo;
+    private final RentalRepo rentalRepo;
+    private final O_Way_PayRepo oWayPayRepo;
+    private final PaymentRepo paymentRepo;
 
     @Override
     @Transactional
@@ -124,6 +119,130 @@ public class TransferServiceImp implements TransferService {
                 fromWallet.getId(),
                 toWallet.getId(),
                 savedTransfer.getAmount(),
+                savedTransfer.getTransferStatus(),
+                savedTransfer.getType(),
+                savedTransfer.getCreatedAt()
+        );
+    }
+
+    @Override
+    @Transactional
+    public TransferResponseDto transferForRental(Long rentalId) {
+
+        String username = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepository.findByName(username);
+
+
+        // 1️⃣ Get rental
+        Rental rental = rentalRepo.findById(rentalId)
+                .orElseThrow(() -> new EntityNotFoundException("Rental not found"));
+
+        // 2️⃣ Validate customer ownership
+//        if (!rental.getCustomer().getName().equals(username)) {
+//            throw new RuntimeException("Unauthorized rental payment attempt");
+//        }
+//        if (!rental.getCustomer().getName().equals(username)) {
+//            throw new RuntimeException("Unauthorized rental payment attempt");
+//        }
+        if (!rental.getCustomer().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized rental payment attempt");
+        }
+
+        System.out.println("Username: " + username);
+        System.out.println("Rental customer: " + rental.getCustomer().getName());
+
+        // 3️⃣ Get payment for this rental
+        Payment payment = paymentRepo.findByRental(rental)
+                .orElseThrow(() -> new EntityNotFoundException("Payment not found for this rental"));
+
+        if (payment.getStatus() == PaymentStatus.PAID) {
+            throw new RuntimeException("Payment already completed");
+        }
+
+        // 4️⃣ Get wallets
+        Wallet fromWallet = walletRepo.findByUser(rental.getCustomer())
+                .orElseThrow(() -> new EntityNotFoundException("Customer wallet not found"));
+
+        Wallet toWallet = walletRepo.findByUser(rental.getDriver())
+                .orElseThrow(() -> new EntityNotFoundException("Driver wallet not found"));
+
+        BigDecimal amount = payment.getAmount();
+
+        // 5️⃣ Validate balance
+        if (fromWallet.getBalance().compareTo(amount) < 0) {
+            throw new RuntimeException("Insufficient balance");
+        }
+
+        // 6️⃣ Update balances
+        fromWallet.setBalance(fromWallet.getBalance().subtract(amount));
+        toWallet.setBalance(toWallet.getBalance().add(amount));
+
+        walletRepo.save(fromWallet);
+        walletRepo.save(toWallet);
+
+        // 7️⃣ Create Transfer
+        Transfer transfer = new Transfer();
+        transfer.setFromWallet(fromWallet);
+        transfer.setToWallet(toWallet);
+        transfer.setAmount(amount);
+        transfer.setTransferStatus(TransferStatus.COMPLETED);
+        transfer.setType(Type.TRANSFER);
+        transfer.setCreatedAt(LocalDateTime.now());
+
+        Transfer savedTransfer = transferRepo.save(transfer);
+
+        // 8️⃣ Create Ledger Transactions
+
+        // DEBIT
+        Transaction debit = new Transaction();
+        debit.setWallet(fromWallet);
+        debit.setAmount(amount);
+        debit.setDirection(Direction.DEBIT);
+        debit.setType(Type.TRANSFER);
+        debit.setTransactionStatus(TransactionStatus.SUCCESS);
+        debit.setTransfer(savedTransfer);
+        debit.setReferenceId("PAY-" + payment.getId());
+        debit.setCreatedAt(LocalDateTime.now());
+        transactionRepo.save(debit);
+
+        // CREDIT
+        Transaction credit = new Transaction();
+        credit.setWallet(toWallet);
+        credit.setAmount(amount);
+        credit.setDirection(Direction.CREDIT);
+        credit.setType(Type.TRANSFER);
+        credit.setTransactionStatus(TransactionStatus.SUCCESS);
+        credit.setTransfer(savedTransfer);
+        credit.setReferenceId("PAY-" + payment.getId());
+        credit.setCreatedAt(LocalDateTime.now());
+        transactionRepo.save(credit);
+
+        // 9️⃣ Update Payment
+        payment.setStatus(PaymentStatus.PAID);
+        payment.setUpdatedAt(LocalDateTime.now());
+        paymentRepo.save(payment);
+
+        // 🔟 Update Rental
+        rental.setPaid_at(LocalDateTime.now());
+        rental.setRentalStatus(Rental_Status.COMPLETED);
+        rentalRepo.save(rental);
+
+        // 1️⃣1️⃣ Create O_Way_Pay link
+        O_Way_Pay link = new O_Way_Pay();
+        link.setPayment(payment);
+        link.setTransfer(savedTransfer);
+        oWayPayRepo.save(link);
+
+        // 1️⃣2️⃣ Return response
+        return new TransferResponseDto(
+                savedTransfer.getId(),
+                fromWallet.getId(),
+                toWallet.getId(),
+                amount,
                 savedTransfer.getTransferStatus(),
                 savedTransfer.getType(),
                 savedTransfer.getCreatedAt()

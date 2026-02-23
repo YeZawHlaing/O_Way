@@ -27,4 +27,6 @@ public class PaymentResponseDto {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private Long driverWalletId;
 }

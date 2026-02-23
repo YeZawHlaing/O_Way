@@ -6,4 +6,5 @@ import com.example.O_Way.dto.responseDto.TransferResponseDto;
 public interface TransferService {
 
     TransferResponseDto transfer(TransferRequestDto request);
+    public TransferResponseDto transferForRental(Long rentalId);
 }

@@ -114,4 +114,13 @@ public class CustomerController {
 
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/rental/{rentalId}/transfer")
+    public ResponseEntity<TransferResponseDto> transferForRental(
+            @PathVariable Long rentalId) {
+
+        TransferResponseDto response =
+                transferService.transferForRental(rentalId);
+
+        return ResponseEntity.ok(response);
+    }
 }

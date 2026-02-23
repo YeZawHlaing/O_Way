@@ -1,8 +1,10 @@
 package com.example.O_Way.service.serviceImp;
 
+import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.PaymentPatchRequestDto;
 import com.example.O_Way.dto.requestDto.PaymentRequestDto;
 import com.example.O_Way.dto.responseDto.PaymentResponseDto;
+import com.example.O_Way.dto.responseDto.RentalResponseDto;
 import com.example.O_Way.model.Payment;
 import com.example.O_Way.model.Rental;
 import com.example.O_Way.model.User;
@@ -32,21 +34,21 @@ public class PaymentServiceImp implements PaymentService {
     @Override
     public PaymentResponseDto createPayment(PaymentRequestDto request) {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-
+        // Get authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
         User user = userRepository.findByName(username);
 
+        // Find rental
         Rental rental = rentalRepo.findById(request.getRentalId())
                 .orElseThrow(() -> new EntityNotFoundException("Rental not found"));
 
-        // 🔐 Ensure rental belongs to authenticated user
+        // Ensure rental belongs to authenticated user
         if (!rental.getCustomer().getId().equals(user.getId())) {
             throw new RuntimeException("You cannot pay for this rental");
         }
 
+        // Create new payment
         Payment payment = new Payment();
         payment.setRental(rental);
         payment.setAmount(request.getAmount());
@@ -54,9 +56,23 @@ public class PaymentServiceImp implements PaymentService {
         payment.setStatus(PaymentStatus.PENDING);
         payment.setCreatedAt(LocalDateTime.now());
 
+        // Save payment
         Payment saved = paymentRepo.save(payment);
 
-        return mapToDto(saved);
+        // Map to response DTO
+        PaymentResponseDto responseDto = modelMapper.map(saved, PaymentResponseDto.class);
+        responseDto.setCreatedAt(saved.getCreatedAt());
+        responseDto.setUpdatedAt(saved.getUpdatedAt());
+        responseDto.setAmount(saved.getAmount());
+
+        // Fetch driver's wallet from rental
+        if (rental.getDriver() != null && rental.getDriver().getWallet() != null) {
+            responseDto.setDriverWalletId(rental.getDriver().getWallet().getId());
+        } else {
+            responseDto.setDriverWalletId(null); // or throw exception if required
+        }
+
+        return responseDto;
     }
 
     @Override
