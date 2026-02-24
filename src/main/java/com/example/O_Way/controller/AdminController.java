@@ -3,6 +3,7 @@ package com.example.O_Way.controller;
 
 import com.example.O_Way.common.response.ApiResponse;
 import com.example.O_Way.dto.requestDto.VehicleRequestDto;
+import com.example.O_Way.dto.requestDto.VehicleUpdateDto;
 import com.example.O_Way.dto.responseDto.UserResponseDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 import com.example.O_Way.model.Roles;
@@ -80,5 +81,17 @@ public class AdminController {
     @GetMapping("/getRentals")
     public ResponseEntity<ApiResponse> getAllRentals() {
         return ResponseEntity.ok(rentalService.getAllRentals());
+    }
+    @PatchMapping
+    public ResponseEntity<ApiResponse> updateVehicle(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody VehicleUpdateDto request
+    ) {
+
+        String username = userDetails.getUsername();
+
+        return ResponseEntity.ok(
+                vehicleService.updateVehicles(username, request)
+        );
     }
 }
