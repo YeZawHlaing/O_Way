@@ -83,6 +83,7 @@ public class AdminController {
     public ResponseEntity<ApiResponse> getAllRentals() {
         return ResponseEntity.ok(rentalService.getAllRentals());
     }
+
     @PatchMapping
     public ResponseEntity<ApiResponse> updateVehicle(
             @AuthenticationPrincipal UserDetails userDetails,

@@ -32,4 +32,5 @@ public class RentalResponseDto {
     private Long driverWalletId;
 
     private ProfileResponseDto profile;
+    private VehicleResponseDto vehicle;
 }
