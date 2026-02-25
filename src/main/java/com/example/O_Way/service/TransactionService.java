@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TransactionService {
     List<TransactionResponseDto> getTransactionsByUsername(String username, TransactionRequestDto requestDto);
-
+    List<TransactionResponseDto> getAllTransactions(TransactionRequestDto requestDto);
 }

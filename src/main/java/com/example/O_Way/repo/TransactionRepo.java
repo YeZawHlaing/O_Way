@@ -16,4 +16,7 @@ public interface TransactionRepo extends JpaRepository<Transaction,Long> {
 
     // All transactions for a user
     List<Transaction> findByWallet_User_Name(String name);
+    List<Transaction> findByCreatedAtBetween(LocalDateTime from, LocalDateTime to);
+
+    List<Transaction> findAll();
 }

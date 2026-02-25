@@ -22,6 +22,9 @@ public interface VehicleService {
     List<VehicleResponseDto> getAllVehicles();
 
     public ApiResponse getMyVehicle();
+    ApiResponse deleteVehicleById(Long vehicleId);
+
+    ApiResponse patchVehicleById(Long vehicleId, VehicleUpdateDto request);
 
 
 

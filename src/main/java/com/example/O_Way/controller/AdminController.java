@@ -2,8 +2,10 @@ package com.example.O_Way.controller;
 
 
 import com.example.O_Way.common.response.ApiResponse;
+import com.example.O_Way.dto.requestDto.TransactionRequestDto;
 import com.example.O_Way.dto.requestDto.VehicleRequestDto;
 import com.example.O_Way.dto.requestDto.VehicleUpdateDto;
+import com.example.O_Way.dto.responseDto.TransactionResponseDto;
 import com.example.O_Way.dto.responseDto.UserResponseDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 import com.example.O_Way.model.Roles;
@@ -29,6 +31,7 @@ public class AdminController {
     private final RolesService rolesService;
     private final ProfileService profileService;
     private final RentalService rentalService;
+    private final TransactionService transactionService;
 
 //    @PatchMapping("/updateVehicle")
 //    public ResponseEntity<ApiResponse> updateVehicle(
@@ -49,11 +52,21 @@ public class AdminController {
         Roles savedRole = rolesService.CreateRole(role);
         return ResponseEntity.ok(savedRole);
     }
+    @GetMapping("/transaction")
+    public ResponseEntity<List<TransactionResponseDto>> getAllTransactions(
+            @RequestBody(required = false) TransactionRequestDto requestDto) {
+
+        List<TransactionResponseDto> response =
+                transactionService.getAllTransactions(requestDto);
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/getRoles")
     public ResponseEntity<List<Roles>> getRoles() {
         return ResponseEntity.ok(rolesService.getRoles());
     }
+
     @GetMapping("/getProfiles")
     public ResponseEntity<ApiResponse> getProfile(Authentication authentication) {
 
@@ -95,5 +108,19 @@ public class AdminController {
         return ResponseEntity.ok(
                 vehicleService.updateVehicles(username, request)
         );
+    }
+    @PatchMapping("/updateVehicle/{id}")
+    public ResponseEntity<ApiResponse> patchVehicle(
+            @PathVariable Long id,
+            @RequestBody VehicleUpdateDto request) {
+
+        ApiResponse response = vehicleService.patchVehicleById(id, request);
+        return ResponseEntity.ok(response);
+    }
+    @DeleteMapping("deleteVehicle/{id}")
+    public ResponseEntity<ApiResponse> deleteVehicleById(@PathVariable Long id) {
+
+        ApiResponse response = vehicleService.deleteVehicleById(id);
+        return ResponseEntity.ok(response);
     }
 }

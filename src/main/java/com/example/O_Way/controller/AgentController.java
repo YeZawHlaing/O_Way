@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/agent")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class AgentController {
 
     private final WalletService walletService;

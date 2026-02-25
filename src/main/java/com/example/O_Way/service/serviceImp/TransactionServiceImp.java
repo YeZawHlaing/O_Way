@@ -42,4 +42,35 @@ public class TransactionServiceImp implements TransactionService {
                 ))
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<TransactionResponseDto> getAllTransactions(TransactionRequestDto requestDto) {
+
+        List<Transaction> transactions;
+
+        // Filter by date if provided
+        if (requestDto != null &&
+                requestDto.getFromDate() != null &&
+                requestDto.getToDate() != null) {
+
+            transactions = transactionRepository.findByCreatedAtBetween(
+                    requestDto.getFromDate(),
+                    requestDto.getToDate()
+            );
+        } else {
+            transactions = transactionRepository.findAll();
+        }
+
+        // Convert Entity -> DTO
+        return transactions.stream()
+                .map(t -> new TransactionResponseDto(
+                        t.getId(),
+                        t.getAmount(),
+                        t.getType(),
+                        t.getDirection(),
+                        t.getTransactionStatus(),
+                        t.getReferenceId(),
+                        t.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+    }
 }

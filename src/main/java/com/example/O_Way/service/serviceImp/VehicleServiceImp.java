@@ -7,6 +7,8 @@ import com.example.O_Way.dto.responseDto.ProfileResponseDto;
 import com.example.O_Way.dto.responseDto.UserResponseDto;
 import com.example.O_Way.dto.responseDto.VehicleResponseDto;
 import com.example.O_Way.model.*;
+import com.example.O_Way.repo.AddressRepo;
+import com.example.O_Way.repo.LocationRepo;
 import com.example.O_Way.repo.UserRepo;
 import com.example.O_Way.repo.VehicleRepo;
 import com.example.O_Way.service.VehicleService;
@@ -30,6 +32,8 @@ public class VehicleServiceImp implements VehicleService {
     private final VehicleRepo vehicleRepo;
     private final UserRepo userRepo;
     private final ModelMapper modelMapper;
+    private final AddressRepo addressRepo;
+    private final LocationRepo locationRepo;
 
     // =====================================================
     // CREATE VEHICLE
@@ -266,5 +270,48 @@ public class VehicleServiceImp implements VehicleService {
                 .data(response)
                 .build();
     }
+    @Override
+    public ApiResponse patchVehicleById(Long vehicleId, VehicleUpdateDto request) {
 
+        // 1. Check vehicle exists
+        Vehicle vehicle = vehicleRepo.findById(vehicleId).orElse(null);
+        if (vehicle == null) {
+            return new ApiResponse("Vehicle not found");
+        }
+
+        // 2. PATCH logic (update only non-null fields)
+
+        if (request.getVehicleStatus() != null) {
+            vehicle.setVehicleStatus(request.getVehicleStatus());
+        }
+
+        // 3. Save updated vehicle
+        vehicleRepo.save(vehicle);
+
+        return new ApiResponse("Vehicle updated successfully");
+    }
+
+    @Override
+    @Transactional
+    public ApiResponse deleteVehicleById(Long vehicleId) {
+
+        // 1. Check vehicle exists
+        Vehicle vehicle = vehicleRepo.findById(vehicleId).orElse(null);
+        if (vehicle == null) {
+            return new ApiResponse("Vehicle not found");
+        }
+
+        // 2. Delete dependent records first (FK safety)
+        locationRepo.deleteByVehicleId(vehicleId);
+        addressRepo.deleteByVehicleId(vehicleId);
+
+        // Do NOT delete users
+        // userRepo.deleteByVehicleId(vehicleId);  <-- keep removed
+
+        // 3. Delete vehicle
+        vehicleRepo.delete(vehicle);
+        vehicleRepo.flush();   // force DB commit
+
+        return new ApiResponse("Vehicle deleted successfully");
+    }
 }

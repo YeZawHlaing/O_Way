@@ -1,6 +1,7 @@
 package com.example.O_Way.repo;
 
 import com.example.O_Way.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     boolean existsByName(String name);
     List<User> findByRoles_Name(String roleName);
+    @Transactional
+    void deleteByVehicleId(Long vehicleId);
 }
