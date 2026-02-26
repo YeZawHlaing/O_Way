@@ -146,7 +146,7 @@ public class TransferServiceImp implements TransferService {
         }
 
         // 4️⃣ Get payment for this rental
-        Payment payment = paymentRepo.findById(rentalId)
+        Payment payment = paymentRepo.findByRentalId(rentalId)
                 .orElseThrow(() -> new EntityNotFoundException("Payment not found for this rental"));
 
         if (payment.getStatus() == PaymentStatus.PAID) {
@@ -215,10 +215,10 @@ public class TransferServiceImp implements TransferService {
         payment.setUpdatedAt(LocalDateTime.now());
         paymentRepo.save(payment);
 
-        // 1️⃣1️⃣ Update Rental
-//        rental.setPaid_at(LocalDateTime.now());
-//        rental.setRentalStatus(Rental_Status.COMPLETED);
-//        rentalRepo.save(rental);
+//         1️⃣1️⃣ Update Rental
+        rental.setPaid_at(LocalDateTime.now());
+        rental.setRentalStatus(Rental_Status.PAID);
+        rentalRepo.save(rental);
 
         // 1️⃣2️⃣ Create O_Way_Pay link
         O_Way_Pay link = new O_Way_Pay();

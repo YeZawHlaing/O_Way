@@ -5,5 +5,6 @@ public enum Rental_Status {
     PENDING,
     ACCEPTED,
     DECLINED,
-    COMPLETED
+    COMPLETED,
+    PAID
 }
